@@ -27,6 +27,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.factoryevents.presentation.FactoryEventApplication
 import com.example.factoryevents.ui.theme.FactoryEventsTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -38,8 +39,15 @@ import org.json.JSONObject
 
 class MainActivity : ComponentActivity() {
 
+    private val component by lazy {
+        (application as FactoryEventApplication).component
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        component.inject(this)
+
         super.onCreate(savedInstanceState)
 
         setContent {
