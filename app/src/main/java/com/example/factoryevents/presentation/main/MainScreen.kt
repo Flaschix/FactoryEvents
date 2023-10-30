@@ -18,10 +18,10 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.factoryevents.navigation.AppNavGraph
 import com.example.factoryevents.navigation.myRememberNavigationState
+import com.example.factoryevents.presentation.ViewModelFactory
 
-@Preview
 @Composable
-fun MainScreen(    /*viewModel: ViewModelFactory*/    ){
+fun MainScreen(viewModel: ViewModelFactory){
 
     val navigationState = myRememberNavigationState()
 

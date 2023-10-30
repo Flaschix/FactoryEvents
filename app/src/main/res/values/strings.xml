@@ -3,4 +3,5 @@
     <string name="hse">HSE</string>
     <string name="ojt">OJT</string>
     <string name="make_request">Make Request</string>
+    <string name="sign_in">Sign In</string>
 </resources>

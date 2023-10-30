@@ -11,7 +11,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
@@ -19,13 +21,19 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.factoryevents.GoogleApiContract
+import com.example.factoryevents.domain.entity.AuthState
 import com.example.factoryevents.presentation.FactoryEventApplication
+import com.example.factoryevents.presentation.ViewModelFactory
 import com.example.factoryevents.ui.theme.FactoryEventsTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 import org.json.JSONArray
+import javax.inject.Inject
 
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
     private val component by lazy {
         (application as FactoryEventApplication).component
@@ -41,7 +49,24 @@ class MainActivity : ComponentActivity() {
         setContent {
             FactoryEventsTheme {
 
-                MainScreen()
+                val viewModel: MainViewModel = viewModel(factory = viewModelFactory)
+                val authState = viewModel.authState.collectAsState(AuthState.Initial)
+
+                val launcher = rememberLauncherForActivityResult(
+                    contract = GoogleApiContract()
+                ){
+                    viewModel.performAuthResult()
+                }
+
+                when(authState.value){
+                    is AuthState.Authorized -> MainScreen(viewModelFactory)
+                    is AuthState.NotAuthorized -> LoginScreen{
+                        launcher.launch(1)
+                    }
+
+                    else -> {}
+                }
+
             }
         }
     }
