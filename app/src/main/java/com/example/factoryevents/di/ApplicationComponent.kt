@@ -1,7 +1,7 @@
 package com.example.factoryevents.di
 
 import android.content.Context
-import com.example.factoryevents.MainActivity
+import com.example.factoryevents.presentation.main.MainActivity
 import dagger.BindsInstance
 import dagger.Component
 

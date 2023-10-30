@@ -1,41 +1,29 @@
-package com.example.factoryevents
+package com.example.factoryevents.presentation.main
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContract
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.android.volley.AuthFailureError
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.factoryevents.GoogleApiContract
 import com.example.factoryevents.presentation.FactoryEventApplication
 import com.example.factoryevents.ui.theme.FactoryEventsTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import org.json.JSONArray
-import org.json.JSONObject
 
 class MainActivity : ComponentActivity() {
 
@@ -52,19 +40,15 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             FactoryEventsTheme {
-                Surface(
-                    color = MaterialTheme.colors.background
-                ) {
-                    Column {
-                        signIn()
-                        Greeting("Android"){
-                            insertTestData()
-                        }
-                    }
-                }
+
+                MainScreen()
             }
         }
     }
+
+
+
+
 
     @Composable
     private fun signIn(){

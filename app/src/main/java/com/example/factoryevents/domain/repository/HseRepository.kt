@@ -13,5 +13,5 @@ interface HseRepository {
 
     fun getOJTList(): StateFlow<List<OJT>>
 
-    fun checkAuthState()
+    suspend fun checkAuthState()
 }
