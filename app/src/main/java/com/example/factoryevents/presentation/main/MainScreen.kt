@@ -25,7 +25,6 @@ import com.example.factoryevents.presentation.ViewModelFactory
 @Composable
 fun MainScreen(
     viewModelFactory: ViewModelFactory,
-    user: User
 ){
 
     val navigationState = myRememberNavigationState()
@@ -64,7 +63,7 @@ fun MainScreen(
 
         AppNavGraph(
             navHostController = navigationState.navHostController,
-            HSE_ScreenContent = { HseScreen(viewModelFactory, user) },
+            HSE_ScreenContent = { HseScreen(viewModelFactory) },
             OJT_ScreenContent = { TextCounter(text = "OJT")  },
             makeRequestScreenContent = { TextCounter(text = "makeRequest") }
         )

@@ -16,10 +16,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -37,6 +39,7 @@ class HseRepositoryImpl @Inject constructor(
 
         authStateFlowEvents.collect{
             val authState = if(GoogleSignIn.getLastSignedInAccount(context) != null) AuthState.Authorized else AuthState.NotAuthorized
+
             emit(authState)
 
             userFlowEvent.emit(Unit)
@@ -100,7 +103,7 @@ class HseRepositoryImpl @Inject constructor(
         authStateFlowEvents.emit(Unit)
     }
 
-    private var _user = User("", AccessType.NONE, "", "")
+    private var _user = User()
 
     private val user: User
         get() = _user
@@ -110,23 +113,48 @@ class HseRepositoryImpl @Inject constructor(
     private val userFlow = flow {
         userFlowEvent.emit(Unit)
 
-        if(user.rank == AccessType.NONE) emit(user)
+        userFlowEvent.collect {
+            if (user.rank != AccessType.NONE) {
+                emit(user)
+                return@collect
+            }
 
-        userFlowEvent.collect{
-            _user = getUserFromDb()
-
+            val mapUser = mapper.mapResponseToUser()
+            _user = mapUser
             emit(user)
+
         }
-    }.stateIn(
-        scope = coroutineScope,
-        started = SharingStarted.Lazily,
-        initialValue = user
-    )
-
-
-    private fun getUserFromDb(): User{
-        return User("awd@efes", AccessType.L3, "gre","ad")
+    }.retry(2) {
+        delay(RETRY_TIME_OUT)
+        true
     }
 
-    override fun getUser(): StateFlow<User> = userFlow
+    private val getUserExist: StateFlow<User> = userFlow
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.Lazily,
+            initialValue = user
+        )
+
+
+
+    override fun getUser(): StateFlow<User> = getUserExist
+//        flow{
+//        delay(5000)
+//        emit(mapper.mapResponseToUser())
+//
+//    }.retry {
+//        delay(RETRY_TIME_OUT)
+//        true
+//    }.stateIn(
+//        scope = coroutineScope,
+//        started = SharingStarted.Lazily,
+//        initialValue = User()
+//    )
+
+
+
+    private companion object{
+        const val RETRY_TIME_OUT: Long = 5000
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.factoryevents.presentation.main
 
 import androidx.lifecycle.ViewModel
+import com.example.factoryevents.domain.entity.AccessType
 import com.example.factoryevents.domain.usecase.GetUserUseCase
 import com.example.factoryevents.extensions.mergeWith
 import com.example.factoryevents.presentation.HSE.HseScreenState
@@ -18,17 +19,10 @@ class AccessViewModel @Inject constructor(
 
     private val userFlow = getUserUseCase()
 
-    private val loadDataEvents = MutableSharedFlow<Unit>()
-
-    private val loadDataFlow = flow {
-        loadDataEvents.collect{
-            emit(LoginState.LoggedUser(userFlow.value))
-        }
-    }
-
     val screenState = userFlow
         .catch {  }
-        .map { LoginState.LoggedUser(it) as LoginState}
+        .filter { it.rank != AccessType.NONE }
+        .map { LoginState.LoggedUser(it) as LoginState }
         .onStart { emit(LoginState.Loading) }
-        .mergeWith(loadDataFlow)
+
 }

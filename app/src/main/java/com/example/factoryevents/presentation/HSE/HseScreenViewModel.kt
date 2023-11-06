@@ -17,18 +17,18 @@ class HseScreenViewModel @Inject constructor(
 
     private val hseListFlow = getHSEListUseCase()
 
-    private val loadDataEvents = MutableSharedFlow<Unit>()
-
-    private val loadDataFlow = flow {
-        loadDataEvents.collect{
-            emit(HseScreenState.HSE_List(hseListFlow.value))
-        }
-    }
+//    private val loadDataEvents = MutableSharedFlow<Unit>()
+//
+//    private val loadDataFlow = flow {
+//        loadDataEvents.collect{
+//            emit(HseScreenState.HSE_List(hseListFlow.value))
+//        }
+//    }
 
     val screenState = hseListFlow
         .catch {  }
         .filter { it.isNotEmpty() }
         .map { HseScreenState.HSE_List(it) as HseScreenState }
         .onStart { emit(HseScreenState.Loading) }
-        .mergeWith(loadDataFlow)
+//        .mergeWith(loadDataFlow)
 }

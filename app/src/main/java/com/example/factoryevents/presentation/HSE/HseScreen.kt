@@ -23,7 +23,6 @@ import com.example.factoryevents.presentation.ViewModelFactory
 @Composable
 fun HseScreen(
     viewModelFactory: ViewModelFactory,
-    user: User
 ){
     val viewModel: HseScreenViewModel = viewModel(factory = viewModelFactory)
     val screenState = viewModel.screenState.collectAsState(HseScreenState.Initial)

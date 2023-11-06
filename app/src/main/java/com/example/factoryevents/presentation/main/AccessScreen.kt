@@ -26,7 +26,6 @@ fun AccessScreen(viewModelFactory: ViewModelFactory){
             } else {
                 MainScreen(
                     viewModelFactory = viewModelFactory,
-                    user = currentState.user
                 )
             }
         }
