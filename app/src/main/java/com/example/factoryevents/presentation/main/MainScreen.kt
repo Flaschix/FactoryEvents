@@ -16,12 +16,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.factoryevents.domain.entity.User
 import com.example.factoryevents.navigation.AppNavGraph
 import com.example.factoryevents.navigation.myRememberNavigationState
+import com.example.factoryevents.presentation.HSE.HseScreen
 import com.example.factoryevents.presentation.ViewModelFactory
 
 @Composable
-fun MainScreen(viewModel: ViewModelFactory){
+fun MainScreen(
+    viewModelFactory: ViewModelFactory,
+    user: User
+){
 
     val navigationState = myRememberNavigationState()
 
@@ -59,7 +64,7 @@ fun MainScreen(viewModel: ViewModelFactory){
 
         AppNavGraph(
             navHostController = navigationState.navHostController,
-            HSE_ScreenContent = { TextCounter(text = "HSE") },
+            HSE_ScreenContent = { HseScreen(viewModelFactory, user) },
             OJT_ScreenContent = { TextCounter(text = "OJT")  },
             makeRequestScreenContent = { TextCounter(text = "makeRequest") }
         )

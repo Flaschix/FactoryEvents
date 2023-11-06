@@ -8,5 +8,5 @@ data class User(
 )
 
 enum class AccessType{
-    L1, L2, L3
+    L1, L2, L3, NONE
 }

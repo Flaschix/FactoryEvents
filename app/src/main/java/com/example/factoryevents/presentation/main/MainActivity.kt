@@ -21,7 +21,9 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.factoryevents.GoogleApiContract
+import com.example.factoryevents.domain.entity.AccessType
 import com.example.factoryevents.domain.entity.AuthState
+import com.example.factoryevents.domain.entity.User
 import com.example.factoryevents.presentation.FactoryEventApplication
 import com.example.factoryevents.presentation.ViewModelFactory
 import com.example.factoryevents.ui.theme.FactoryEventsTheme
@@ -59,7 +61,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 when(authState.value){
-                    is AuthState.Authorized -> MainScreen(viewModelFactory)
+                    is AuthState.Authorized-> AccessScreen(viewModelFactory)
                     is AuthState.NotAuthorized -> LoginScreen{
                         launcher.launch(1)
                     }
