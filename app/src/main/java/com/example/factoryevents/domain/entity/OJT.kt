@@ -1,6 +1,7 @@
 package com.example.factoryevents.domain.entity
 
 data class OJT(
+    val id: Int,
     val type: String,
     val week: String,
     val place: String,

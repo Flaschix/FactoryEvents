@@ -32,6 +32,9 @@ class HseRepositoryImpl @Inject constructor(
 
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
+
+    //authState//////////////////
+
     private val authStateFlowEvents = MutableSharedFlow<Unit>(replay = 1)
 
     private val authStateFlow = flow {
@@ -42,7 +45,7 @@ class HseRepositoryImpl @Inject constructor(
 
             emit(authState)
 
-            userFlowEvent.emit(Unit)
+//            userFlowEvent.emit(Unit)
         }
     }.stateIn(
         scope = coroutineScope,
@@ -53,6 +56,11 @@ class HseRepositoryImpl @Inject constructor(
 
     override fun getAuthStateFlow(): StateFlow<AuthState> = authStateFlow
 
+    override suspend fun checkAuthState() {
+        authStateFlowEvents.emit(Unit)
+    }
+
+    //workerHSE/////////////////
 
     private val _workerHSEList = mutableListOf<WorkerHSE>()
 
@@ -69,15 +77,7 @@ class HseRepositoryImpl @Inject constructor(
         hseWorkerDataEvent.collect{
             if(workerHSEList.isNotEmpty()) emit(workerHSEList)
 
-            val list: List<WorkerHSE> = arrayListOf(
-                WorkerHSE(
-                    3,
-                    "Kol",
-                    "SDF",
-                    arrayListOf(HSE("Covid","2","3","5","5.02")
-                    )
-                )
-            )
+            val list = mapper.mapResponseToHSE()
 
             _workerHSEList.addAll(list)
 
@@ -95,62 +95,96 @@ class HseRepositoryImpl @Inject constructor(
 
 
     override fun getWorkerHSEList(): StateFlow<List<WorkerHSE>> = workerHSEs
-    override fun getOJTList(): StateFlow<List<OJT>> {
-        TODO("Not yet implemented")
+
+
+    //OJT ////////////////////////////////
+
+    private val _ojtList = mutableListOf<OJT>()
+
+    private val ojtList: List<OJT>
+        get() = _ojtList.toList()
+
+    private val ojtDataEvent = MutableSharedFlow<Unit>(replay = 1)
+    private val refreshedOJTListFlow = MutableSharedFlow<List<OJT>>()
+
+    private val loadedOJTListFlow = flow {
+
+        ojtDataEvent.emit(Unit)
+
+        ojtDataEvent.collect{
+            if(ojtList.isNotEmpty()) emit(ojtList)
+
+            val list = mapper.mapResponseToOJT()
+
+            _ojtList.addAll(list)
+
+            emit(ojtList)
+        }
     }
 
-    override suspend fun checkAuthState() {
-        authStateFlowEvents.emit(Unit)
-    }
+    private val OJTes: StateFlow<List<OJT>> = loadedOJTListFlow
+        .mergeWith(refreshedOJTListFlow)
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.Lazily,
+            initialValue = ojtList
+        )
+
+    override fun getOJTList(): StateFlow<List<OJT>> = OJTes
+
+
+    //User///////////////////////////////////////
 
     private var _user = User()
 
     private val user: User
         get() = _user
 
-    private val userFlowEvent = MutableSharedFlow<Unit>(replay = 1)
-
-    private val userFlow = flow {
-        userFlowEvent.emit(Unit)
-
-        userFlowEvent.collect {
-            if (user.rank != AccessType.NONE) {
-                emit(user)
-                return@collect
-            }
-
-            val mapUser = mapper.mapResponseToUser()
-            _user = mapUser
-            emit(user)
-
-        }
-    }.retry(2) {
-        delay(RETRY_TIME_OUT)
-        true
-    }
-
-    private val getUserExist: StateFlow<User> = userFlow
-        .stateIn(
-            scope = coroutineScope,
-            started = SharingStarted.Lazily,
-            initialValue = user
-        )
-
-
-
-    override fun getUser(): StateFlow<User> = getUserExist
-//        flow{
-//        delay(5000)
-//        emit(mapper.mapResponseToUser())
+//    private val userFlowEvent = MutableSharedFlow<Unit>(replay = 1)
 //
-//    }.retry {
+//    private val userFlow = flow {
+//        userFlowEvent.emit(Unit)
+//
+//        userFlowEvent.collect {
+//            if (user.rank != AccessType.NONE) {
+//                emit(user)
+//                return@collect
+//            }
+//
+//            val mapUser = mapper.mapResponseToUser()
+//            _user = mapUser
+//            emit(user)
+//
+//        }
+//    }.retry(2) {
 //        delay(RETRY_TIME_OUT)
 //        true
-//    }.stateIn(
-//        scope = coroutineScope,
-//        started = SharingStarted.Lazily,
-//        initialValue = User()
-//    )
+//    }
+//
+//    private val getUserExist: StateFlow<User> = userFlow
+//        .stateIn(
+//            scope = coroutineScope,
+//            started = SharingStarted.Lazily,
+//            initialValue = user
+//        )
+
+    override fun getUser(): StateFlow<User> = flow{
+        if (user.rank != AccessType.NONE) {
+            emit(user)
+            return@flow
+        }
+
+        val mapUser = mapper.mapResponseToUser()
+        _user = mapUser
+        emit(user)
+    }.retry {
+        delay(RETRY_TIME_OUT)
+        true
+    }.stateIn(
+        scope = coroutineScope,
+        started = SharingStarted.Lazily,
+        initialValue = User()
+    )
 
 
 

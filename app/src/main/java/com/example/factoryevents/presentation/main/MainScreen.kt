@@ -20,6 +20,7 @@ import com.example.factoryevents.domain.entity.User
 import com.example.factoryevents.navigation.AppNavGraph
 import com.example.factoryevents.navigation.myRememberNavigationState
 import com.example.factoryevents.presentation.HSE.HseScreen
+import com.example.factoryevents.presentation.OJT.OjtScreen
 import com.example.factoryevents.presentation.ViewModelFactory
 
 @Composable
@@ -64,7 +65,7 @@ fun MainScreen(
         AppNavGraph(
             navHostController = navigationState.navHostController,
             HSE_ScreenContent = { HseScreen(viewModelFactory) },
-            OJT_ScreenContent = { TextCounter(text = "OJT")  },
+            OJT_ScreenContent = { OjtScreen(viewModelFactory)  },
             makeRequestScreenContent = { TextCounter(text = "makeRequest") }
         )
     }

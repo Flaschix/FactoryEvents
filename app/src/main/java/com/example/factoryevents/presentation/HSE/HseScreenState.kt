@@ -1,6 +1,5 @@
 package com.example.factoryevents.presentation.HSE
 
-import com.example.factoryevents.domain.entity.HSE
 import com.example.factoryevents.domain.entity.WorkerHSE
 
 sealed class HseScreenState{

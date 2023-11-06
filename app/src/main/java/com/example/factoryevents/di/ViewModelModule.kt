@@ -2,6 +2,7 @@ package com.example.factoryevents.di
 
 import androidx.lifecycle.ViewModel
 import com.example.factoryevents.presentation.HSE.HseScreenViewModel
+import com.example.factoryevents.presentation.OJT.OjtScreenViewModel
 import com.example.factoryevents.presentation.main.AccessViewModel
 import com.example.factoryevents.presentation.main.MainViewModel
 import dagger.Binds
@@ -25,4 +26,9 @@ interface ViewModelModule {
     @ViewModelKey(AccessViewModel::class)
     @Binds
     fun bindAccessViewModel(viewModel: AccessViewModel): ViewModel
+
+    @IntoMap
+    @ViewModelKey(OjtScreenViewModel::class)
+    @Binds
+    fun bindOjtScreenViewModel(viewModel: OjtScreenViewModel): ViewModel
 }
