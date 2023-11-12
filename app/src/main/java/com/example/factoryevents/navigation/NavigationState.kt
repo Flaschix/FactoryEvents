@@ -21,6 +21,10 @@ class NavigationState(
             restoreState = true
         }
     }
+
+    fun navigateToFireOrder(){
+        navHostController.navigate(Screen.FireOrderFeed.route)
+    }
 }
 
 @Composable

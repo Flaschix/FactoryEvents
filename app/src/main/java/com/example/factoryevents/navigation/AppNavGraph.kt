@@ -10,7 +10,8 @@ fun AppNavGraph(
     navHostController: NavHostController,
     HSE_ScreenContent: @Composable () -> Unit,
     OJT_ScreenContent: @Composable () -> Unit,
-    makeRequestScreenContent: @Composable () -> Unit
+    orderScreenContent: @Composable () -> Unit,
+    fireOrderScreenContent: @Composable () -> Unit
 ){
     NavHost(navController = navHostController, startDestination = Screen.HSEFeed.route) {
         composable(Screen.HSEFeed.route) {
@@ -20,8 +21,10 @@ fun AppNavGraph(
         composable(Screen.OJTFeed.route) {
             OJT_ScreenContent()
         }
-        composable(Screen.makeRequestFeed.route) {
-            makeRequestScreenContent()
-        }
+
+        orderScreenNavGraph(
+            mainOrderScreen = orderScreenContent,
+            fireOrderScreen = fireOrderScreenContent
+        )
     }
 }

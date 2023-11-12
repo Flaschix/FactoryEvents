@@ -13,14 +13,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.factoryevents.domain.entity.User
 import com.example.factoryevents.navigation.AppNavGraph
 import com.example.factoryevents.navigation.myRememberNavigationState
 import com.example.factoryevents.presentation.HSE.HseScreen
 import com.example.factoryevents.presentation.OJT.OjtScreen
+import com.example.factoryevents.presentation.Order.OrderScreen
 import com.example.factoryevents.presentation.ViewModelFactory
 
 @Composable
@@ -38,7 +37,7 @@ fun MainScreen(
                 val items = listOf(
                     NavigationItem.HSEFeed,
                     NavigationItem.OJTFeed,
-                    NavigationItem.makeRequestFeed
+                    NavigationItem.OrderFeed
                 )
 
                 items.forEach { item ->
@@ -66,7 +65,13 @@ fun MainScreen(
             navHostController = navigationState.navHostController,
             HSE_ScreenContent = { HseScreen(viewModelFactory) },
             OJT_ScreenContent = { OjtScreen(viewModelFactory)  },
-            makeRequestScreenContent = { TextCounter(text = "makeRequest") }
+            orderScreenContent = { OrderScreen(
+                viewModelFactory,
+                onFireClickListener = {
+                    navigationState.navigateToFireOrder()
+                }
+            ) },
+            fireOrderScreenContent = { TextCounter(text = "fireOrder") }
         )
     }
 }

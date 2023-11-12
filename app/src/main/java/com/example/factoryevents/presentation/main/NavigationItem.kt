@@ -25,8 +25,8 @@ sealed class NavigationItem(
         icon = Icons.Outlined.Favorite
     )
 
-    object makeRequestFeed: NavigationItem(
-        screen = Screen.makeRequestFeed,
+    object OrderFeed: NavigationItem(
+        screen = Screen.HomeOrder,
         resId = R.string.make_request,
         icon = Icons.Outlined.Person
     )
