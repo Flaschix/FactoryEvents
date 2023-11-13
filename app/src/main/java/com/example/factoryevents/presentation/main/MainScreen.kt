@@ -17,6 +17,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.factoryevents.navigation.AppNavGraph
 import com.example.factoryevents.navigation.myRememberNavigationState
+import com.example.factoryevents.presentation.FireOrder.FireOrder
 import com.example.factoryevents.presentation.HSE.HseScreen
 import com.example.factoryevents.presentation.OJT.OjtScreen
 import com.example.factoryevents.presentation.Order.OrderScreen
@@ -71,7 +72,9 @@ fun MainScreen(
                     navigationState.navigateToFireOrder()
                 }
             ) },
-            fireOrderScreenContent = { TextCounter(text = "fireOrder") }
+            fireOrderScreenContent = { FireOrder(
+                onBackPressedListener = { navigationState.navHostController.popBackStack() },
+            ) }
         )
     }
 }
