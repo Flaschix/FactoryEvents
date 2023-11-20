@@ -20,7 +20,7 @@ sealed class NavigationItem(
     )
 
     object OJTFeed: NavigationItem(
-        screen = Screen.OJTFeed,
+        screen = Screen.HomeOJT,
         resId = R.string.ojt,
         icon = Icons.Outlined.Favorite
     )

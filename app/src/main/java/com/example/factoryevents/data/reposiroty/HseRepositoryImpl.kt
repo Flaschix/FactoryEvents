@@ -7,6 +7,7 @@ import com.example.factoryevents.domain.entity.AccessType
 import com.example.factoryevents.domain.entity.AuthState
 import com.example.factoryevents.domain.entity.HSE
 import com.example.factoryevents.domain.entity.OJT
+import com.example.factoryevents.domain.entity.Order
 import com.example.factoryevents.domain.entity.User
 import com.example.factoryevents.domain.entity.WorkerHSE
 import com.example.factoryevents.domain.repository.HseRepository
@@ -186,6 +187,9 @@ class HseRepositoryImpl @Inject constructor(
         initialValue = User()
     )
 
+    override suspend fun createOrder(order: Order) {
+        TODO("Not yet implemented")
+    }
 
 
     private companion object{

@@ -1,5 +1,6 @@
 package com.example.factoryevents.presentation.main
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -19,6 +20,7 @@ import com.example.factoryevents.navigation.AppNavGraph
 import com.example.factoryevents.navigation.myRememberNavigationState
 import com.example.factoryevents.presentation.FireOrder.FireOrder
 import com.example.factoryevents.presentation.HSE.HseScreen
+import com.example.factoryevents.presentation.OJT.OjtItemScreen
 import com.example.factoryevents.presentation.OJT.OjtScreen
 import com.example.factoryevents.presentation.Order.OrderScreen
 import com.example.factoryevents.presentation.ViewModelFactory
@@ -46,7 +48,6 @@ fun MainScreen(
                     val selected = navBackStackEntry?.destination?.hierarchy?.any {
                         it.route == item.screen.route
                     } ?: false
-
                     BottomNavigationItem(
                         selected = selected,
                         onClick = {
@@ -65,7 +66,21 @@ fun MainScreen(
         AppNavGraph(
             navHostController = navigationState.navHostController,
             HSE_ScreenContent = { HseScreen(viewModelFactory) },
-            OJT_ScreenContent = { OjtScreen(viewModelFactory)  },
+
+            OJT_ScreenContent = { OjtScreen(
+                viewModelFactory,
+                onOjtClickListener = {
+                    navigationState.navigateToOjtItem(it)
+                }
+            ) },
+
+            OJT_ItemScreenContent = { ojt ->
+                OjtItemScreen(
+                    onBackPressedListener = { navigationState.navHostController.popBackStack() },
+                    ojt = ojt
+                )
+            },
+
             orderScreenContent = { OrderScreen(
                 viewModelFactory,
                 onFireClickListener = {

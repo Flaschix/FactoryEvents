@@ -9,9 +9,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.factoryevents.R
+import com.example.factoryevents.domain.entity.Order
 import com.example.factoryevents.presentation.FactoryEventApplication
 
 @Composable
@@ -24,7 +23,7 @@ fun FireOrder(
         .getFireOrderComponentFactory()
         .create()
 
-    val viewModel: FireOrderViewModel = viewModel(factory = component.getViewModelFactory())
+    val viewModel: FireOrderScreenViewModel = viewModel(factory = component.getViewModelFactory())
 
     Scaffold(
         topBar = {

@@ -1,8 +1,8 @@
 package com.example.factoryevents.domain.repository
 
 import com.example.factoryevents.domain.entity.AuthState
-import com.example.factoryevents.domain.entity.HSE
 import com.example.factoryevents.domain.entity.OJT
+import com.example.factoryevents.domain.entity.Order
 import com.example.factoryevents.domain.entity.User
 import com.example.factoryevents.domain.entity.WorkerHSE
 import kotlinx.coroutines.flow.StateFlow
@@ -18,4 +18,6 @@ interface HseRepository {
     suspend fun checkAuthState()
 
     fun getUser(): StateFlow<User>
+
+    suspend fun createOrder(order: Order)
 }
