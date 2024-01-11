@@ -1,7 +1,7 @@
 package com.example.factoryevents.di
 
 import androidx.lifecycle.ViewModel
-import com.example.factoryevents.presentation.FireOrder.ReportScreenViewModel
+import com.example.factoryevents.presentation.ReportOrder.ReportScreenViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

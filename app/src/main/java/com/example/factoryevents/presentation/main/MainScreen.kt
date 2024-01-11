@@ -17,7 +17,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.factoryevents.navigation.AppNavGraph
 import com.example.factoryevents.navigation.myRememberNavigationState
-import com.example.factoryevents.presentation.FireOrder.ReportScreen
+import com.example.factoryevents.presentation.ReportOrder.ReportScreen
 import com.example.factoryevents.presentation.HSE.HseScreen
 import com.example.factoryevents.presentation.OJT.OjtItemScreen
 import com.example.factoryevents.presentation.OJT.OjtScreen
@@ -82,7 +82,7 @@ fun MainScreen(
 
             orderScreenContent = { OrderScreen(
                 viewModelFactory,
-                onFireClickListener = {
+                onReportClickListener = {
                     navigationState.navigateToReportOrder()
                 }
             ) },
