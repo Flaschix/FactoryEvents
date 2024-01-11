@@ -23,8 +23,8 @@ class NavigationState(
         }
     }
 
-    fun navigateToFireOrder(){
-        navHostController.navigate(Screen.FireOrderFeed.route)
+    fun navigateToReportOrder(){
+        navHostController.navigate(Screen.ReportOrderFeed.route)
     }
 
     fun navigateToOjtItem(ojt: OJT){

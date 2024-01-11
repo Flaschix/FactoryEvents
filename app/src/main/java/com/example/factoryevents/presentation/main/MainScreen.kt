@@ -1,16 +1,11 @@
 package com.example.factoryevents.presentation.main
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,7 +17,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.factoryevents.navigation.AppNavGraph
 import com.example.factoryevents.navigation.myRememberNavigationState
-import com.example.factoryevents.presentation.FireOrder.FireOrder
+import com.example.factoryevents.presentation.FireOrder.ReportScreen
 import com.example.factoryevents.presentation.HSE.HseScreen
 import com.example.factoryevents.presentation.OJT.OjtItemScreen
 import com.example.factoryevents.presentation.OJT.OjtScreen
@@ -88,10 +83,10 @@ fun MainScreen(
             orderScreenContent = { OrderScreen(
                 viewModelFactory,
                 onFireClickListener = {
-                    navigationState.navigateToFireOrder()
+                    navigationState.navigateToReportOrder()
                 }
             ) },
-            fireOrderScreenContent = { FireOrder(
+            reportOrderScreenContent = { ReportScreen(
                 onBackPressedListener = { navigationState.navHostController.popBackStack() },
             ) }
         )

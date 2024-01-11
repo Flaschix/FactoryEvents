@@ -4,13 +4,13 @@ import com.example.factoryevents.presentation.ViewModelFactory
 import dagger.Subcomponent
 
 @Subcomponent(modules = [OrderViewModelModule::class])
-interface FireOrderComponent {
+interface ReportOrderComponent {
 
     fun getViewModelFactory(): ViewModelFactory
 
     @Subcomponent.Factory
     interface Factory{
 
-        fun create() : FireOrderComponent
+        fun create() : ReportOrderComponent
     }
 }

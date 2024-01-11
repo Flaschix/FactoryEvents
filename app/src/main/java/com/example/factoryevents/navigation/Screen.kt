@@ -25,7 +25,7 @@ sealed class Screen(
 
     object OrderFeed : Screen (ROUTE_ORDER_SCREEN)
     object HomeOrder: Screen(ROUTE_HOME_ORDER_SCREEN)
-    object FireOrderFeed: Screen(ROUTE_FIRE_ORDER_SCREEN)
+    object ReportOrderFeed: Screen(ROUTE_REPORT_ORDER_SCREEN)
 
     companion object{
         const val KEY_OJT = "keyOJT"
@@ -38,7 +38,7 @@ sealed class Screen(
 
         private const val ROUTE_ORDER_SCREEN = "orderScreen"
         private const val ROUTE_HOME_ORDER_SCREEN = "homeOrderScreen"
-        private const val ROUTE_FIRE_ORDER_SCREEN = "fireOrderScreen"
+        private const val ROUTE_REPORT_ORDER_SCREEN = "reportOrderScreen"
 
         private const val SIGN_IN_SCREEN = "signInScreen"
     }

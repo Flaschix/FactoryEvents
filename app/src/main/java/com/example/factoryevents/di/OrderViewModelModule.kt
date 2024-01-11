@@ -1,7 +1,7 @@
 package com.example.factoryevents.di
 
 import androidx.lifecycle.ViewModel
-import com.example.factoryevents.presentation.FireOrder.FireOrderScreenViewModel
+import com.example.factoryevents.presentation.FireOrder.ReportScreenViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -10,7 +10,7 @@ import dagger.multibindings.IntoMap
 interface OrderViewModelModule {
 
     @IntoMap
-    @ViewModelKey(FireOrderScreenViewModel::class)
+    @ViewModelKey(ReportScreenViewModel::class)
     @Binds
-    fun bindFireOrderViewModel(viewModule: FireOrderScreenViewModel): ViewModel
+    fun bindReportOrderViewModel(viewModule: ReportScreenViewModel): ViewModel
 }

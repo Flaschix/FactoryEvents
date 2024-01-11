@@ -49,21 +49,20 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.factoryevents.R
 import com.example.factoryevents.domain.entity.Order
 import com.example.factoryevents.presentation.FactoryEventApplication
-import okhttp3.internal.wait
 import java.util.Calendar
 import java.util.Date
 
 @Composable
-fun FireOrder(
+fun ReportScreen(
     onBackPressedListener: () -> Unit
 ){
 
     val component = (LocalContext.current.applicationContext as FactoryEventApplication)
         .component
-        .getFireOrderComponentFactory()
+        .getReportOrderComponentFactory()
         .create()
 
-    val viewModel: FireOrderScreenViewModel = viewModel(factory = component.getViewModelFactory())
+    val viewModel: ReportScreenViewModel = viewModel(factory = component.getViewModelFactory())
 
     Scaffold(
         topBar = {
@@ -233,7 +232,7 @@ private fun RecurrentIssueButtons() {
 }
 
 @Composable
-private fun ReportViolation( viewModel: FireOrderScreenViewModel, order: Order){
+private fun ReportViolation(viewModel: ReportScreenViewModel, order: Order){
 
 }
 

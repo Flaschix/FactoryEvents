@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class FireOrderScreenViewModel @Inject constructor(
+class ReportScreenViewModel @Inject constructor(
     private val createOrderUseCase: CreateOrderUseCase
 ): ViewModel() {
 

@@ -7,7 +7,7 @@ import androidx.navigation.navigation
 
 fun NavGraphBuilder.orderScreenNavGraph(
     mainOrderScreen: @Composable () -> Unit,
-    fireOrderScreen: @Composable () -> Unit,
+    reportOrderScreen: @Composable () -> Unit,
 ){
     navigation(
         startDestination = Screen.OrderFeed.route,
@@ -18,8 +18,8 @@ fun NavGraphBuilder.orderScreenNavGraph(
                 mainOrderScreen()
             }
 
-            composable(Screen.FireOrderFeed.route){
-                fireOrderScreen()
+            composable(Screen.ReportOrderFeed.route){
+                reportOrderScreen()
             }
         }
     )

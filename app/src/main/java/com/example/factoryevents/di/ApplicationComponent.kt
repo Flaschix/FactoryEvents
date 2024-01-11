@@ -16,7 +16,7 @@ interface ApplicationComponent {
 
     fun inject(mainActivity: MainActivity)
 
-    fun getFireOrderComponentFactory(): FireOrderComponent.Factory
+    fun getReportOrderComponentFactory(): ReportOrderComponent.Factory
 
     @Component.Factory
     interface Factory{

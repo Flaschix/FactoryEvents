@@ -15,7 +15,7 @@ fun AppNavGraph(
     OJT_ItemScreenContent: @Composable (ojt: OJT) -> Unit,
 
     orderScreenContent: @Composable () -> Unit,
-    fireOrderScreenContent: @Composable () -> Unit
+    reportOrderScreenContent: @Composable () -> Unit
 ){
     NavHost(navController = navHostController, startDestination = Screen.HSEFeed.route) {
         composable(Screen.HSEFeed.route) {
@@ -32,7 +32,7 @@ fun AppNavGraph(
 
         orderScreenNavGraph(
             mainOrderScreen = orderScreenContent,
-            fireOrderScreen = fireOrderScreenContent
+            reportOrderScreen = reportOrderScreenContent
         )
     }
 }
