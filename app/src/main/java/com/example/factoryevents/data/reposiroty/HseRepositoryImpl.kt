@@ -2,6 +2,7 @@ package com.example.factoryevents.data.reposiroty
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import com.example.factoryevents.data.mapper.DataMapper
 import com.example.factoryevents.domain.entity.AccessType
 import com.example.factoryevents.domain.entity.AuthState
@@ -115,11 +116,14 @@ class HseRepositoryImpl @Inject constructor(
         ojtDataEvent.collect{
             if(ojtList.isNotEmpty()) emit(ojtList)
 
-            val list = mapper.mapResponseToOJT()
+            try {
+                Log.d("MYTEST", user.toString())
+                val list = mapper.mapResponseToOJT(user)
+                _ojtList.addAll(list)
+                emit(ojtList)
+            } catch (e: Exception) {
 
-            _ojtList.addAll(list)
-
-            emit(ojtList)
+            }
         }
     }
 
@@ -141,43 +145,23 @@ class HseRepositoryImpl @Inject constructor(
     private val user: User
         get() = _user
 
-//    private val userFlowEvent = MutableSharedFlow<Unit>(replay = 1)
-//
-//    private val userFlow = flow {
-//        userFlowEvent.emit(Unit)
-//
-//        userFlowEvent.collect {
-//            if (user.rank != AccessType.NONE) {
-//                emit(user)
-//                return@collect
-//            }
-//
-//            val mapUser = mapper.mapResponseToUser()
-//            _user = mapUser
-//            emit(user)
-//
-//        }
-//    }.retry(2) {
-//        delay(RETRY_TIME_OUT)
-//        true
-//    }
-//
-//    private val getUserExist: StateFlow<User> = userFlow
-//        .stateIn(
-//            scope = coroutineScope,
-//            started = SharingStarted.Lazily,
-//            initialValue = user
-//        )
-
     override fun getUser(): StateFlow<User> = flow{
         if (user.rank != AccessType.NONE) {
             emit(user)
             return@flow
         }
 
-        val mapUser = mapper.mapResponseToUser()
-        _user = mapUser
-        emit(user)
+        GoogleSignIn.getLastSignedInAccount(context)?.let {
+            try {
+//                val newUser = mapper.mapResponseToUser(it.displayName!!)
+                val newUser = User(mail = "dwad@fesfs.com",rank = AccessType.L3)
+                _user = newUser
+                emit(user)
+            } catch (e: Exception) {
+
+            }
+        }
+
     }.retry {
         delay(RETRY_TIME_OUT)
         true

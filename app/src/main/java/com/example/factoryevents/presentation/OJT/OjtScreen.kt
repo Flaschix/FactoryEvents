@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -75,7 +76,7 @@ private fun ShowOjtList(
 ){
     LazyColumn(
         contentPadding = PaddingValues(top = 10.dp, start = 6.dp, end = 6.dp, bottom = 100.dp),
-        verticalArrangement = Arrangement.spacedBy(6.dp)
+        verticalArrangement = Arrangement.spacedBy(6.dp),
     ){
         items(list, key = {it.id}){ ojt ->
             OjtItem(
@@ -85,26 +86,6 @@ private fun ShowOjtList(
                 }
             )
         }
-    }
-}
-
-@Preview
-@Composable
-private fun OjtItem(){
-    val ojtEx = OJT(
-        1,
-        "Пожарка", "40", "Корпус 2, Здание 1", "fsef", "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhC5mIuy2KaMll2PVI4iE_18w4c7zDCcSi0PzWijCWeakJEJRGhAnIaSkYGLK7dEYlTwYnqTzwOJJcRxBrNFrZMsRovChY8CVpVIXH5pNPPj5wo1kPfGeth4z690xixWqd69vceT1yMaxGB4nDNXUnQ-kuJm3yHgqJreLneAV0nWp4lsF-BPFX0CgM8Tw/w1200-h630-p-k-no-nu/card%20view.jpg",
-        "wadaw", "Иванов И И", "dwa", "Симомненко М М",
-        "12.05.23", false
-    )
-
-
-    Card(
-        modifier = Modifier
-            .clip(RectangleShape)
-            .padding(4.dp)
-    ) {
-        Header(ojtEx)
     }
 }
 
@@ -133,7 +114,7 @@ fun Header(ojt: OJT){
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background( if(ojt.status) Color.Green else Color.LightGray )
+            .background(if (ojt.status) colorResource(id = R.color.teal_200) else colorResource(R.color.pink))
             .padding(horizontal = 3.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -203,7 +184,8 @@ fun IconNearText(
     iconId: Int,
     text: String,
     itemClickListener: (() -> Unit)? = null,
-    tint: Color = MaterialTheme.colors.secondary
+    tint: Color = colorResource(id = R.color.black),
+    textColor: Color = colorResource(id = R.color.black)
 ) {
     val modifier = if(itemClickListener == null) Modifier
     else Modifier.clickable { itemClickListener() }
@@ -219,6 +201,9 @@ fun IconNearText(
             tint = tint
         )
         Spacer(modifier = Modifier.width(5.dp))
-        Text(text = text)
+        Text(
+            text = text,
+            color = textColor
+        )
     }
 }

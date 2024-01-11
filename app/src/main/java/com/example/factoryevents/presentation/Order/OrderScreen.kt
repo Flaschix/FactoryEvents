@@ -1,14 +1,24 @@
 package com.example.factoryevents.presentation.Order
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.factoryevents.R
 import com.example.factoryevents.presentation.ViewModelFactory
 
 @Composable
@@ -27,13 +37,47 @@ fun OrderScreen(
 fun OrderList(
     onFireClickListener: () -> Unit
 ){
-    Box(
-        modifier = Modifier.size(100.dp),
-        contentAlignment = Alignment.Center
-    ){
-        Text(
-            text = "FireOrder",
-            modifier = Modifier.clickable { onFireClickListener() },
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 30.dp),
+            onClick = { onFireClickListener() },
+        ) {
+            Text(
+                text = stringResource(id = R.string.order_fire),
             )
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 30.dp),
+            onClick = {  },
+        ) {
+            Text(
+                text = "Второе",
+            )
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 30.dp),
+            onClick = {  },
+        ) {
+            Text(
+                text = "Третье",
+            )
+        }
     }
 }

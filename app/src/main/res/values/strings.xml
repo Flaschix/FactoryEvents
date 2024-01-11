@@ -4,4 +4,34 @@
     <string name="ojt">OJT</string>
     <string name="make_request">Make Request</string>
     <string name="sign_in">Sign In</string>
+    <string name="ojt_describe">Описание</string>
+    <string name="ojt_place">Место проведения:</string>
+    <string name="ojt_pilot">Выполняющий:</string>
+    <string name="ojt_responsibility">Ответсвенный:</string>
+    <string name="ojt_who_opened">Кем открыт:</string>
+    <string name="ojt_options">Действия:</string>
+    <string name="ojt_status">Статус:</string>
+    <string name="ojt_status_true">Закрыт</string>
+    <string name="ojt_status_false">Открыт</string>
+    <string name="ojt_due_date">Срок выполнения:</string>
+    <string name="order_fire">Заявка по пожарке</string>
+    <string name="what_happened">Что произошло?</string>
+    <string name="describe_detected_deviation">Укажите, что именно вы обнаружили.</string>
+    <string name="upload_photo_video">Загрузите фото или видео нарушение.</string>
+    <string name="is_it_a_recurrent_issue">Эта проблема уже случалась ранее?</string>
+    <string name="why_is_it_problem">Почему это проблема?</string>
+    <string name="describe_what_standard_violated">Укажите какую норму это нарушает, какой риск вызывает.</string>
+    <string name="when_did_it_heppend">Когда это произошло?</string>
+    <string name="time">Время</string>
+    <string name="date">Дата</string>
+    <string name="who_detected_it">Кто обнаружил?</string>
+    <string name="write_your_name_and_position">Укажите себя или очевидца происшествия (Имя и должность).</string>
+    <string name="how_it_was_detected">Как это было обнаружено?</string>
+    <string name="visually_during_test_audit">Визуально, при испытании, во время аудита, ...?</string>
+    <string name="how_many_deviations_detected">Сколько отклонений обнаружено?</string>
+    <string name="indicate_your_manager">
+        Укажите своего руководителя либо руководителя департамента, где обнаружено нарушение.
+    </string>
+    <string name="thank_you_for_safety">Спасибо вам за поддержание безопасности на работе.</string>
+
 </resources>
