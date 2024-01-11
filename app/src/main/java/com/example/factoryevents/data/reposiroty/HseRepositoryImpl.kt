@@ -172,7 +172,7 @@ class HseRepositoryImpl @Inject constructor(
     )
 
     override suspend fun createOrder(order: Order) {
-        TODO("Not yet implemented")
+        Log.d("TEST_ORDER", "$order")
     }
 
 

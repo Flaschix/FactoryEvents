@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ContentAlpha
@@ -38,12 +39,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.factoryevents.R
+import com.example.factoryevents.domain.entity.Order
 import com.example.factoryevents.presentation.FactoryEventApplication
+import okhttp3.internal.wait
 import java.util.Calendar
 import java.util.Date
 
@@ -82,10 +88,12 @@ fun FireOrder(
                 stringResource(id = R.string.describe_detected_deviation)
             )
 
+            //Эта проблема уже случалась ранее?
             Spacer(modifier = Modifier.height(10.dp))
 
             RecurrentIssueButtons()
 
+            //Почему это проблема?
             Spacer(modifier = Modifier.height(10.dp))
 
             TextFieldWithHelperMessage(
@@ -93,28 +101,68 @@ fun FireOrder(
                 stringResource(id = R.string.describe_what_standard_violated)
             )
 
+            //Когда это произошло?
+            //Время
+            //Дата
 
+
+            //Кто обнаружил?
             Spacer(modifier = Modifier.height(10.dp))
 
             TextFieldWithHelperMessage(
-                stringResource(id = R.string.why_is_it_problem),
-                stringResource(id = R.string.describe_what_standard_violated)
+                stringResource(id = R.string.who_detected_it),
+                stringResource(id = R.string.write_your_name_and_position)
             )
-//            MainContent()
+
+            //Как это было обнаружено?
+            Spacer(modifier = Modifier.height(10.dp))
+
+            TextFieldWithHelperMessage(
+                stringResource(id = R.string.how_it_was_detected),
+                stringResource(id = R.string.visually_during_test_audit)
+            )
+
+            //Сколько отклонений обнаружено?
+            Spacer(modifier = Modifier.height(10.dp))
+
+            NumberOutlinedTextFieldSample(stringResource(id = R.string.how_many_deviations_detected))
+
+            //Укажите своего руководителя либо руководителя департамента, где обнаружено нарушение.
+
+
+            //Кнопка
+            Button(
+                onClick = {
+                    viewModel.createOrder(parseToOrder("","",""))
+
+                    //-----------------------------------------------------------------------------------/
+                    onBackPressedListener() //-------------------------Добавить дожидания отправки-------/
+                    //-----------------------------------------------------------------------------------/
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp)
+            ) {
+                Text(text = stringResource(id = R.string.report_violation))
+            }
+
         }
 
     }
 }
 
 @Composable
-fun TextFieldWithHelperMessage(descript: String, helpMsg: String) {
+private fun TextFieldWithHelperMessage(descript: String, helpMsg: String) {
     var text by rememberSaveable { mutableStateOf("") }
 
     Column {
         OutlinedTextField(
             value = text,
             onValueChange = { text = it },
-            label = { Text(descript) }
+            label = { Text(descript) },
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp)
+                .fillMaxWidth()
         )
         Text(
             text = helpMsg,
@@ -126,18 +174,27 @@ fun TextFieldWithHelperMessage(descript: String, helpMsg: String) {
 }
 
 @Composable
-fun SimpleOutlinedTextFieldSample(descript: String) {
+private fun NumberOutlinedTextFieldSample(descript: String) {
     var text by rememberSaveable { mutableStateOf("") }
 
     OutlinedTextField(
+        keyboardOptions = KeyboardOptions(
+            capitalization = KeyboardCapitalization.None,
+            autoCorrect = true,
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Next
+        ),
         value = text,
-        onValueChange = { text = it },
-        label = { Text(descript) }
+        onValueChange = { text = if(it.toIntOrNull() != null) it else text },
+        label = { Text(descript) },
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
     )
 }
 
 @Composable
-fun RecurrentIssueButtons() {
+private fun RecurrentIssueButtons() {
     Text(
         text = stringResource(id = R.string.is_it_a_recurrent_issue),
         style = MaterialTheme.typography.body1.merge(),
@@ -174,6 +231,16 @@ fun RecurrentIssueButtons() {
         }
     }
 }
+
+@Composable
+private fun ReportViolation( viewModel: FireOrderScreenViewModel, order: Order){
+
+}
+
+private fun parseToOrder(p1: String, p2: String, p3: String): Order{
+    return Order()
+}
+
 
 @Composable
 fun MainContent() {
