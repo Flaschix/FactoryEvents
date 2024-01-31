@@ -88,7 +88,7 @@ private fun ShowHSERow(
         ) {
             Text(text = "Name:")
             Text(text = workerHSE.manager)
-            Text(text = "O:")
+            Text(text = "Supervisor:")
             Text(text = workerHSE.supervisor)
         }
         Row(

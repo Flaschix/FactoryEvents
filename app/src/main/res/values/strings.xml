@@ -33,8 +33,8 @@
     </string>
     <string name="thank_you_for_safety">Спасибо вам за поддержание безопасности на работе.</string>
     <string name="report_violation">Сообщить о нарушение</string>
-    <string name="planned_line">Planned Line</string>
-    <string name="done_on_line">Done on Line</string>
+    <string name="planned_line">PL</string>
+    <string name="done_on_line">DL</string>
     <string name="score">Score</string>
     <string name="date">Date</string>
     <string name="report">Report</string>

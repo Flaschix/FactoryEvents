@@ -11,6 +11,7 @@ import com.example.factoryevents.domain.entity.HSE
 import com.example.factoryevents.domain.entity.OJT
 import com.example.factoryevents.domain.entity.User
 import com.example.factoryevents.domain.entity.WorkerHSE
+import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import okhttp3.internal.wait
 import org.json.JSONArray
@@ -22,42 +23,102 @@ import kotlin.coroutines.suspendCoroutine
 class DataMapper @Inject constructor(
     private val context: Context
 ) {
+    suspend fun mapResponseToHSE(): List<WorkerHSE> = suspendCoroutine { continuation ->
+        val action = "getHSE"
+        var url = APP_SCRIPT_URL
+        val rank = "L2"
+        val name = "name"
+        url += "action=$action&rank=$rank&name=$name"
 
-    fun mapResponseToHSE(): List<WorkerHSE>{
-        val list: List<WorkerHSE> = arrayListOf(
-            WorkerHSE(
-                3,
-                "Aleksandr",
-                "LFD",
-                arrayListOf(
-                    HSE("Covid","2","3","5","5.02"),
-                    HSE("SAF","2","3","5","5.02"),
-                    HSE("SGR","2","3","5","5.02")
-                )
-            ),
-            WorkerHSE(
-                4,
-                "Sofia Dolce",
-                "SDF",
-                arrayListOf(
-                    HSE("Covid","2","3","5","5.02"),
-                    HSE("SAF","2","3","5","5.02"),
-                    HSE("SGR","2","3","5","5.02")
-                )
-            )
-            ,WorkerHSE(
-                5,
-                "Smorodinov",
-                "REG",
-                arrayListOf(
-                    HSE("Covid","2","3","5","5.02"),
-                    HSE("SAF","2","3","5","5.02"),
-                    HSE("SGR","2","3","5","7.2")
-                )
-            )
+        val request: JsonObjectRequest = JsonObjectRequest(
+            Request.Method.GET, url, null,
+            { response ->
+
+                val list = mutableListOf<WorkerHSE>()
+                val userJsonArray: JSONArray = response.getJSONArray("List")
+
+                for (i in 0 until userJsonArray.length()) {
+                    val rowArray = userJsonArray.getJSONObject(i)
+                    val covid = rowArray.getJSONObject("covid19")
+                    val saf = rowArray.getJSONObject("SAF")
+                    val sgr = rowArray.getJSONObject("SGR")
+
+                    list.add(
+                        WorkerHSE(
+                            id = i,
+                            manager = rowArray.getString("manager"),
+                            supervisor = rowArray.getString("supervisor"),
+                            listOf(
+                                HSE(
+                                    title = "CV19",
+                                    plannedLine = covid.getString("Planned Line"),
+                                    doneOnLine = covid.getString("Done on Line"),
+                                    score = covid.getString("Score"),
+                                    date = covid.getString("Date")
+                                ),
+                                HSE(
+                                    title = "SAF",
+                                    plannedLine = saf.getString("Planned Line"),
+                                    doneOnLine = saf.getString("Done on Line"),
+                                    score = saf.getString("Score"),
+                                    date = saf.getString("Date")
+                                ),
+                                HSE(
+                                    title = "SGR",
+                                    plannedLine = sgr.getString("Planned Line"),
+                                    doneOnLine = sgr.getString("Done on Line"),
+                                    score = sgr.getString("Score"),
+                                    date = sgr.getString("Date")
+                                )
+                            )
+                        )
+                    )
+                }
+
+                continuation.resume(list)
+            },
+            { error ->
+                // Handle error
+                continuation.resumeWithException(error)
+            }
         )
 
-        return list
+        val queue: RequestQueue = Volley.newRequestQueue(context)
+        queue.add(request)
+//        val list: List<WorkerHSE> = arrayListOf(
+//            WorkerHSE(
+//                3,
+//                "Aleksandr",
+//                "LFD",
+//                arrayListOf(
+//                    HSE("Covid","2","3","5","5.02"),
+//                    HSE("SAF","2","3","5","5.02"),
+//                    HSE("SGR","2","3","5","5.02")
+//                )
+//            ),
+//            WorkerHSE(
+//                4,
+//                "Sofia Dolce",
+//                "SDF",
+//                arrayListOf(
+//                    HSE("Covid","2","3","5","5.02"),
+//                    HSE("SAF","2","3","5","5.02"),
+//                    HSE("SGR","2","3","5","5.02")
+//                )
+//            )
+//            ,WorkerHSE(
+//                5,
+//                "Smorodinov",
+//                "REG",
+//                arrayListOf(
+//                    HSE("Covid","2","3","5","5.02"),
+//                    HSE("SAF","2","3","5","5.02"),
+//                    HSE("SGR","2","3","5","7.2")
+//                )
+//            )
+//        )
+//
+//        return list
     }
 
     suspend fun mapResponseToOJT(user: User): List<OJT> = suspendCoroutine { continuation ->
@@ -75,22 +136,22 @@ class DataMapper @Inject constructor(
                 val userJsonArray: JSONArray = response.getJSONArray("List")
 
                 for (i in 0 until userJsonArray.length()) {
-                    val rowArray: JSONArray = userJsonArray.getJSONArray(i)
+                    val rowArray = userJsonArray.getJSONObject(i)
 
                     list.add(
                         OJT(
                             id = i,
-                            type = rowArray.optString(0, ""),
-                            week = rowArray.optString(1, ""),
-                            place = rowArray.optString(2, ""),
-                            offence = rowArray.optString(3, ""),
-                            img = rowArray.optString(4, ""),
-                            byWhomOpened = rowArray.optString(5, ""),
-                            areResponsible = rowArray.optString(6, ""),
-                            options = rowArray.optString(7, ""),
-                            pilot = rowArray.optString(8, ""),
-                            dueDate = rowArray.optString(9, ""),
-                            status = rowArray.optBoolean(10)
+                            type = rowArray.getString("type"),
+                            week = rowArray.getString("week"),
+                            place = rowArray.getString("place"),
+                            offence = rowArray.getString("offence"),
+                            img = rowArray.getString("img"),
+                            byWhomOpened = rowArray.getString("byWhomOpened"),
+                            areResponsible = rowArray.getString( "areResponsible"),
+                            options = rowArray.getString("options"),
+                            pilot = rowArray.getString("pilot"),
+                            dueDate = rowArray.getString("dueDate"),
+                            status = rowArray.getBoolean("status")
                         )
                     )
                 }
@@ -134,7 +195,7 @@ class DataMapper @Inject constructor(
 
 
     companion object{
-        private const val APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyEEhpl9AlyBI6m37qxY7XQ86e-Auf6b9Cr3SL4QKmtrYQ14A-lRwMe7R6eHDwudDGX/exec?"
+        private const val APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtXSwBcPvzx1P6vfw_ozL82mlCpLMZhHH5Sftb5zPpu2dK9Y2vxGJDq-KfiY5y1Wtm/exec?"
      }
 }
 
