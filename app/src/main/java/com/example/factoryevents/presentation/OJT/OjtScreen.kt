@@ -23,6 +23,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -79,6 +80,7 @@ private fun ShowOjtList(
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ){
         items(list, key = {it.id}){ ojt ->
+            Log.d("OJT_TEST", "${ojt.img}: ${ojt.img.isEmpty()}, id: ${ojt.id}")
             OjtItem(
                 ojt = ojt,
                 onClickListener = {
@@ -168,7 +170,7 @@ fun Header(ojt: OJT){
         }
 
         AsyncImage(
-            model = ojt.img,
+            model = ojt.img.ifEmpty { "https://www.minecraftskins.com/uploads/avatars/b81d7635e0a5e759016dcfc5110745d71c908510.png?v609" },
             modifier = Modifier
                 .weight(2f)
                 .fillMaxWidth()

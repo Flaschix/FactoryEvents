@@ -74,7 +74,7 @@ private fun OjtInformation(
             Spacer(modifier = Modifier.height(10.dp))
 
             AsyncImage(
-                model = ojt.img,
+                model = ojt.img.ifEmpty { "https://www.minecraftskins.com/uploads/avatars/b81d7635e0a5e759016dcfc5110745d71c908510.png?v609" },
                 contentDescription = "",
                 modifier = Modifier
                     .fillMaxWidth()

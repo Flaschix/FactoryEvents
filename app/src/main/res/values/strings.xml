@@ -23,7 +23,6 @@
     <string name="describe_what_standard_violated">Укажите какую норму это нарушает, какой риск вызывает.</string>
     <string name="when_did_it_heppend">Когда это произошло?</string>
     <string name="time">Время</string>
-    <string name="date">Дата</string>
     <string name="who_detected_it">Кто обнаружил?</string>
     <string name="write_your_name_and_position">Укажите себя или очевидца происшествия (Имя и должность).</string>
     <string name="how_it_was_detected">Как это было обнаружено?</string>
@@ -34,5 +33,10 @@
     </string>
     <string name="thank_you_for_safety">Спасибо вам за поддержание безопасности на работе.</string>
     <string name="report_violation">Сообщить о нарушение</string>
+    <string name="planned_line">Planned Line</string>
+    <string name="done_on_line">Done on Line</string>
+    <string name="score">Score</string>
+    <string name="date">Date</string>
+    <string name="report">Report</string>
 
 </resources>

@@ -153,8 +153,8 @@ class HseRepositoryImpl @Inject constructor(
 
         GoogleSignIn.getLastSignedInAccount(context)?.let {
             try {
-//                val newUser = mapper.mapResponseToUser(it.displayName!!)
-                val newUser = User(mail = "dwad@fesfs.com",rank = AccessType.L3)
+                val newUser = mapper.mapResponseToUser(it.displayName!!)
+//                val newUser = User(mail = "dwad@fesfs.com",rank = AccessType.L3)
                 _user = newUser
                 emit(user)
             } catch (e: Exception) {

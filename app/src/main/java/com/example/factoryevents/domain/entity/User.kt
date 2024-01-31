@@ -4,7 +4,8 @@ data class User(
     val mail: String = "",
     val rank: AccessType = AccessType.NONE,
     val firstName: String = "",
-    val secondName: String = ""
+    val secondName: String = "",
+    val function: String = "",
 )
 
 enum class AccessType{

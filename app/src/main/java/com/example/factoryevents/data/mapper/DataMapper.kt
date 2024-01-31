@@ -27,26 +27,32 @@ class DataMapper @Inject constructor(
         val list: List<WorkerHSE> = arrayListOf(
             WorkerHSE(
                 3,
-                "Kol",
-                "SDF",
+                "Aleksandr",
+                "LFD",
                 arrayListOf(
-                    HSE("Covid","2","3","5","5.02")
+                    HSE("Covid","2","3","5","5.02"),
+                    HSE("SAF","2","3","5","5.02"),
+                    HSE("SGR","2","3","5","5.02")
                 )
             ),
             WorkerHSE(
                 4,
-                "Dol",
+                "Sofia Dolce",
                 "SDF",
                 arrayListOf(
-                    HSE("Covid","2","3","5","5.02")
+                    HSE("Covid","2","3","5","5.02"),
+                    HSE("SAF","2","3","5","5.02"),
+                    HSE("SGR","2","3","5","5.02")
                 )
             )
             ,WorkerHSE(
                 5,
-                "Mol",
-                "SDF",
+                "Smorodinov",
+                "REG",
                 arrayListOf(
-                    HSE("Covid","2","3","5","5.02")
+                    HSE("Covid","2","3","5","5.02"),
+                    HSE("SAF","2","3","5","5.02"),
+                    HSE("SGR","2","3","5","7.2")
                 )
             )
         )
@@ -55,37 +61,39 @@ class DataMapper @Inject constructor(
     }
 
     suspend fun mapResponseToOJT(user: User): List<OJT> = suspendCoroutine { continuation ->
-        val action = "getUser"
-        val nameTest = "Ашихмин"
-        var url = "https://script.google.com/macros/s/AKfycbz1ffBCkW4mtoOzk0SgjYDQsZSWiz2DYdQV1p8gZQB6OQWwGNktfyPA5ec6N43znant/exec?"
-
-        url += "action=$action&user=$nameTest"
+        val action = "getOJT"
+        var url = APP_SCRIPT_URL
+        val rank = "L2"
+        val func = "PTS PLANT"
+        url += "action=$action&rank=$rank&func=$func"
 
         val request: JsonObjectRequest = JsonObjectRequest(
             Request.Method.GET, url, null,
             { response ->
 
-//                val userJson: JSONArray = response.getJSONArray("User")
-                val list: List<OJT> = arrayListOf(
-                    OJT(
-                        1,
-                        "Пожарка", "40", "Корпус 2, Здание 1", "Сделать то твцф фзцвпщ укт ктуцзптщ ущ укзп цщутп щцктпщтцтп кщтуцщшпкщт щшцукпщшкуцщз тцукпщшкщтцуштпщ цуктпщтк ущшптцщукшптщцшук", "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhC5mIuy2KaMll2PVI4iE_18w4c7zDCcSi0PzWijCWeakJEJRGhAnIaSkYGLK7dEYlTwYnqTzwOJJcRxBrNFrZMsRovChY8CVpVIXH5pNPPj5wo1kPfGeth4z690xixWqd69vceT1yMaxGB4nDNXUnQ-kuJm3yHgqJreLneAV0nWp4lsF-BPFX0CgM8Tw/w1200-h630-p-k-no-nu/card%20view.jpg",
-                        "wadaw", "Иванов И И", "dwa", "Симомненко М М",
-                        "12.05.23", false
-                    ),
-                    OJT(
-                        2,
-                        "Пожарка", "40", "Корпус 2, Здание 1", "Сделать то твцф фзцвпщ укт ктуцзптщ ущ укзп цщутп щцктпщтцтп кщтуцщшпкщт щшцукпщшкуцщз тцукпщшкщтцуштпщ цуктпщтк ущшптцщукшптщцшук", "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhC5mIuy2KaMll2PVI4iE_18w4c7zDCcSi0PzWijCWeakJEJRGhAnIaSkYGLK7dEYlTwYnqTzwOJJcRxBrNFrZMsRovChY8CVpVIXH5pNPPj5wo1kPfGeth4z690xixWqd69vceT1yMaxGB4nDNXUnQ-kuJm3yHgqJreLneAV0nWp4lsF-BPFX0CgM8Tw/w1200-h630-p-k-no-nu/card%20view.jpg",
-                        "wadaw", "Иванов И И", "dwa", "Симомненко М М",
-                        "12.05.23", true
-                    ),
-                    OJT(
-                        3,
-                        "Пожарка", "40", "Корпус 2, Здание 1", "Сделать то твцф фзцвпщ укт ктуцзптщ ущ укзп цщутп щцктпщтцтп кщтуцщшпкщт щшцукпщшкуцщз тцукпщшкщтцуштпщ цуктпщтк ущшптцщукшптщцшук", "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhC5mIuy2KaMll2PVI4iE_18w4c7zDCcSi0PzWijCWeakJEJRGhAnIaSkYGLK7dEYlTwYnqTzwOJJcRxBrNFrZMsRovChY8CVpVIXH5pNPPj5wo1kPfGeth4z690xixWqd69vceT1yMaxGB4nDNXUnQ-kuJm3yHgqJreLneAV0nWp4lsF-BPFX0CgM8Tw/w1200-h630-p-k-no-nu/card%20view.jpg",
-                        "wadaw", "Иванов И И", "dwa", "Симомненко М М",
-                        "12.05.23", false
-                    ),
-                )
+                val list = mutableListOf<OJT>()
+                val userJsonArray: JSONArray = response.getJSONArray("List")
+
+                for (i in 0 until userJsonArray.length()) {
+                    val rowArray: JSONArray = userJsonArray.getJSONArray(i)
+
+                    list.add(
+                        OJT(
+                            id = i,
+                            type = rowArray.optString(0, ""),
+                            week = rowArray.optString(1, ""),
+                            place = rowArray.optString(2, ""),
+                            offence = rowArray.optString(3, ""),
+                            img = rowArray.optString(4, ""),
+                            byWhomOpened = rowArray.optString(5, ""),
+                            areResponsible = rowArray.optString(6, ""),
+                            options = rowArray.optString(7, ""),
+                            pilot = rowArray.optString(8, ""),
+                            dueDate = rowArray.optString(9, ""),
+                            status = rowArray.optBoolean(10)
+                        )
+                    )
+                }
 
                 continuation.resume(list)
             },
@@ -101,16 +109,17 @@ class DataMapper @Inject constructor(
 
     suspend fun mapResponseToUser(name: String): User = suspendCoroutine { continuation ->
         val action = "getUser"
-        val nameTest = "Ашихмин"
-        var url = "https://script.google.com/macros/s/AKfycbz1ffBCkW4mtoOzk0SgjYDQsZSWiz2DYdQV1p8gZQB6OQWwGNktfyPA5ec6N43znant/exec?"
+        val nameTest = "anastasia oleynikova"
+        var url = APP_SCRIPT_URL
 
+//        url += "action=$action&user=${name.replace('.', ' ')}"
         url += "action=$action&user=$nameTest"
 
         val request: JsonObjectRequest = JsonObjectRequest(
             Request.Method.GET, url, null,
             { response ->
                 val userJson: JSONArray = response.getJSONArray("User")
-                val user = User("awd@efes", AccessType.L3, userJson[2].toString(), userJson[2].toString())
+                val user = User("awd@efes", AccessType.L3, userJson[2].toString(), userJson[2].toString(), userJson[1].toString())
                 continuation.resume(user)
             },
             { error ->
@@ -122,6 +131,11 @@ class DataMapper @Inject constructor(
         val queue: RequestQueue = Volley.newRequestQueue(context)
         queue.add(request)
     }
+
+
+    companion object{
+        private const val APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyEEhpl9AlyBI6m37qxY7XQ86e-Auf6b9Cr3SL4QKmtrYQ14A-lRwMe7R6eHDwudDGX/exec?"
+     }
 }
 
 //val list: List<OJT> = arrayListOf(
@@ -183,3 +197,24 @@ class DataMapper @Inject constructor(
 //)
 //
 //return list
+
+//                val list: List<OJT> = arrayListOf(
+//                    OJT(
+//                        1,
+//                        "Пожарка", "40", "Корпус 2, Здание 1", "Сделать то твцф фзцвпщ укт ктуцзптщ ущ укзп цщутп щцктпщтцтп кщтуцщшпкщт щшцукпщшкуцщз тцукпщшкщтцуштпщ цуктпщтк ущшптцщукшптщцшук", "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhC5mIuy2KaMll2PVI4iE_18w4c7zDCcSi0PzWijCWeakJEJRGhAnIaSkYGLK7dEYlTwYnqTzwOJJcRxBrNFrZMsRovChY8CVpVIXH5pNPPj5wo1kPfGeth4z690xixWqd69vceT1yMaxGB4nDNXUnQ-kuJm3yHgqJreLneAV0nWp4lsF-BPFX0CgM8Tw/w1200-h630-p-k-no-nu/card%20view.jpg",
+//                        "wadaw", "Иванов И И", "dwa", "Симомненко М М",
+//                        "12.05.23", false
+//                    ),
+//                    OJT(
+//                        2,
+//                        "Пожарка", "40", "Корпус 2, Здание 1", "Сделать то твцф фзцвпщ укт ктуцзптщ ущ укзп цщутп щцктпщтцтп кщтуцщшпкщт щшцукпщшкуцщз тцукпщшкщтцуштпщ цуктпщтк ущшптцщукшптщцшук", "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhC5mIuy2KaMll2PVI4iE_18w4c7zDCcSi0PzWijCWeakJEJRGhAnIaSkYGLK7dEYlTwYnqTzwOJJcRxBrNFrZMsRovChY8CVpVIXH5pNPPj5wo1kPfGeth4z690xixWqd69vceT1yMaxGB4nDNXUnQ-kuJm3yHgqJreLneAV0nWp4lsF-BPFX0CgM8Tw/w1200-h630-p-k-no-nu/card%20view.jpg",
+//                        "wadaw", "Иванов И И", "dwa", "Симомненко М М",
+//                        "12.05.23", true
+//                    ),
+//                    OJT(
+//                        3,
+//                        "Пожарка", "40", "Корпус 2, Здание 1", "Сделать то твцф фзцвпщ укт ктуцзптщ ущ укзп цщутп щцктпщтцтп кщтуцщшпкщт щшцукпщшкуцщз тцукпщшкщтцуштпщ цуктпщтк ущшптцщукшптщцшук", "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhC5mIuy2KaMll2PVI4iE_18w4c7zDCcSi0PzWijCWeakJEJRGhAnIaSkYGLK7dEYlTwYnqTzwOJJcRxBrNFrZMsRovChY8CVpVIXH5pNPPj5wo1kPfGeth4z690xixWqd69vceT1yMaxGB4nDNXUnQ-kuJm3yHgqJreLneAV0nWp4lsF-BPFX0CgM8Tw/w1200-h630-p-k-no-nu/card%20view.jpg",
+//                        "wadaw", "Иванов И И", "dwa", "Симомненко М М",
+//                        "12.05.23", false
+//                    ),
+//                )
