@@ -101,15 +101,15 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        
-        
+
+
         Button(onClick = { launcher.launch(1) }) {
             Text(text = "Sdwa")
         }
     }
 
 
-    
+
     fun insertTestData(){
         val data = "test1"
         val action = "addItem"
@@ -143,22 +143,3 @@ class MainActivity : ComponentActivity() {
         )
     }
 }
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier, onLikeClickListener: () -> Unit) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-    Button(onClick = { onLikeClickListener() }) {
-        Text(text = "ADD DATA")
-    }
-}
-
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    FactoryEventsTheme {
-//        Greeting("Android")
-//    }
-//}

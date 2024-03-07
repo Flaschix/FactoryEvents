@@ -1,21 +1,21 @@
 package com.example.factoryevents.data.reposiroty
 
-import android.app.Application
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.util.Base64
 import android.util.Log
 import com.example.factoryevents.data.mapper.DataMapper
 import com.example.factoryevents.domain.entity.AccessType
 import com.example.factoryevents.domain.entity.AuthState
-import com.example.factoryevents.domain.entity.HSE
 import com.example.factoryevents.domain.entity.OJT
 import com.example.factoryevents.domain.entity.Order
 import com.example.factoryevents.domain.entity.User
 import com.example.factoryevents.domain.entity.WorkerHSE
 import com.example.factoryevents.domain.repository.HseRepository
 import com.example.factoryevents.extensions.mergeWith
-import com.example.factoryevents.presentation.main.LoginState
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -25,7 +25,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.stateIn
+import java.io.ByteArrayOutputStream
+import java.io.IOException
 import javax.inject.Inject
+
 
 class HseRepositoryImpl @Inject constructor(
     private val mapper: DataMapper,
@@ -172,8 +175,9 @@ class HseRepositoryImpl @Inject constructor(
     )
 
     override suspend fun createOrder(order: Order) {
-        Log.d("TEST_ORDER", "$order")
+        mapper.mapResponseToReport(order)
     }
+
 
 
     private companion object{

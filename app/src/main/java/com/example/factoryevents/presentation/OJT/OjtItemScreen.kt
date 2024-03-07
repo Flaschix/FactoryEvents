@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -67,6 +69,7 @@ private fun OjtInformation(
         Column(
             modifier = Modifier
                 .padding(all = 8.dp)
+                .verticalScroll(rememberScrollState())
         ) {
 
             Header(ojt.type, ojt.week, ojt.dueDate)
@@ -90,6 +93,8 @@ private fun OjtInformation(
             Spacer(modifier = Modifier.height(10.dp))
 
             Bottom(ojt.place, ojt.pilot, ojt.areResponsible, ojt.byWhomOpened, ojt.options, ojt.status)
+
+            Spacer(modifier = Modifier.height(100.dp))
         }
 
     }

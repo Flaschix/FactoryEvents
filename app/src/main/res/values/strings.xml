@@ -21,13 +21,14 @@
     <string name="is_it_a_recurrent_issue">Эта проблема уже случалась ранее?</string>
     <string name="why_is_it_problem">Почему это проблема?</string>
     <string name="describe_what_standard_violated">Укажите какую норму это нарушает, какой риск вызывает.</string>
-    <string name="when_did_it_heppend">Когда это произошло?</string>
+    <string name="when_did_it_happened">Когда это произошло?</string>
     <string name="time">Время</string>
     <string name="who_detected_it">Кто обнаружил?</string>
     <string name="write_your_name_and_position">Укажите себя или очевидца происшествия (Имя и должность).</string>
     <string name="how_it_was_detected">Как это было обнаружено?</string>
     <string name="visually_during_test_audit">Визуально, при испытании, во время аудита, ...?</string>
     <string name="how_many_deviations_detected">Сколько отклонений обнаружено?</string>
+    <string name="manager">Руководитель</string>
     <string name="indicate_your_manager">
         Укажите своего руководителя либо руководителя департамента, где обнаружено нарушение.
     </string>
@@ -36,7 +37,7 @@
     <string name="planned_line">PL</string>
     <string name="done_on_line">DL</string>
     <string name="score">Score</string>
-    <string name="date">Date</string>
+    <string name="date">Дата</string>
     <string name="report">Report</string>
 
 </resources>

@@ -1,24 +1,33 @@
 package com.example.factoryevents.data.mapper
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.util.Base64
 import android.util.Log
+import android.widget.Toast
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.RequestQueue
+import com.android.volley.Response
+import com.android.volley.RetryPolicy
 import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.factoryevents.domain.entity.AccessType
 import com.example.factoryevents.domain.entity.HSE
 import com.example.factoryevents.domain.entity.OJT
+import com.example.factoryevents.domain.entity.Order
 import com.example.factoryevents.domain.entity.User
 import com.example.factoryevents.domain.entity.WorkerHSE
-import com.google.gson.Gson
-import kotlinx.coroutines.delay
-import okhttp3.internal.wait
 import org.json.JSONArray
+import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
+
 
 class DataMapper @Inject constructor(
     private val context: Context
@@ -85,40 +94,78 @@ class DataMapper @Inject constructor(
 
         val queue: RequestQueue = Volley.newRequestQueue(context)
         queue.add(request)
-//        val list: List<WorkerHSE> = arrayListOf(
-//            WorkerHSE(
-//                3,
-//                "Aleksandr",
-//                "LFD",
-//                arrayListOf(
-//                    HSE("Covid","2","3","5","5.02"),
-//                    HSE("SAF","2","3","5","5.02"),
-//                    HSE("SGR","2","3","5","5.02")
-//                )
-//            ),
-//            WorkerHSE(
-//                4,
-//                "Sofia Dolce",
-//                "SDF",
-//                arrayListOf(
-//                    HSE("Covid","2","3","5","5.02"),
-//                    HSE("SAF","2","3","5","5.02"),
-//                    HSE("SGR","2","3","5","5.02")
-//                )
-//            )
-//            ,WorkerHSE(
-//                5,
-//                "Smorodinov",
-//                "REG",
-//                arrayListOf(
-//                    HSE("Covid","2","3","5","5.02"),
-//                    HSE("SAF","2","3","5","5.02"),
-//                    HSE("SGR","2","3","5","7.2")
-//                )
-//            )
-//        )
-//
-//        return list
+
+    }
+
+    suspend fun mapResponseToReport(order: Order) {
+
+        val stringBitmap64Base = if (order.imgLink.toString().isEmpty()) ""
+        else getStringImage(getBitmapFromUri(order.imgLink))
+
+        Log.d("TEST_ORDER", "image code: $stringBitmap64Base")
+
+        val action = "addReport"
+        var url = APP_SCRIPT_URL
+//            url += "action=$action&uId=$uId&uName=$uName&uImage=$stringBitmap64Base"
+
+        val stringRequest: StringRequest = object : StringRequest(
+            Method.POST, url,
+            Response.Listener<String?> { response ->
+                Toast.makeText(context, response, Toast.LENGTH_LONG).show()
+            },
+            Response.ErrorListener { error ->
+                Toast.makeText(
+                    context,
+                    error.toString(),
+                    Toast.LENGTH_LONG
+                ).show()
+            }) {
+            override fun getParams(): Map<String, String> {
+                val params: MutableMap<String, String> = HashMap()
+                params[ACTION] = action
+                params[WHAT_HAPPENED] = order.whatHappened
+                params[IMAGE] = stringBitmap64Base
+                params[IS_IT_A_RECURRENT_ISSUE] = order.isItARecurrentIssue
+                params[WHY_IS_IT_PROBLEM] = order.whyIsItProblem
+                params[TIME] = order.time
+                params[DATE] = order.date
+                params[WHO_DETECTED_IT] = order.whoDetectedIt
+                params[HOW_IT_WAS_DETECTED] = order.howItWasDetected
+                params[DETECTION_COUNT] = order.detectionCount
+                params[INDICATE_YOUR_MANAGER] = order.indicateYourManager
+
+                return params
+            }
+        }
+
+        val socketTimeout = 30000 // 30 seconds. You can change it
+
+        val policy: RetryPolicy = DefaultRetryPolicy(
+            socketTimeout,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+
+        stringRequest.retryPolicy = policy
+
+        val queue: RequestQueue = Volley.newRequestQueue(context)
+        queue.add(stringRequest)
+
+
+        Log.d("TEST_ORDER", "${order}: Order")
+    }
+
+    private fun getBitmapFromUri(uri: Uri): Bitmap {
+        val inputStream = context.contentResolver.openInputStream(uri)
+
+        return BitmapFactory.decodeStream(inputStream)
+    }
+
+    fun getStringImage(bmp: Bitmap): String {
+        val baos = ByteArrayOutputStream()
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val imageBytes = baos.toByteArray()
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT)
     }
 
     suspend fun mapResponseToOJT(user: User): List<OJT> = suspendCoroutine { continuation ->
@@ -195,8 +242,20 @@ class DataMapper @Inject constructor(
 
 
     companion object{
-        private const val APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtXSwBcPvzx1P6vfw_ozL82mlCpLMZhHH5Sftb5zPpu2dK9Y2vxGJDq-KfiY5y1Wtm/exec?"
-     }
+        private const val APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzqFsojt7uCfBkece-N00xP8XRz2lTyjT2zNpWUW7rAxWZsKv3aJEZtPeCkIoylcz-A/exec?"
+
+        private const val ACTION = "action"
+        private const val WHAT_HAPPENED = "whatHappened"
+        private const val IMAGE = "uImage"
+        private const val IS_IT_A_RECURRENT_ISSUE = "isItARecurrentIssue"
+        private const val WHY_IS_IT_PROBLEM = "whyIsItProblem"
+        private const val TIME = "time"
+        private const val DATE = "date"
+        private const val WHO_DETECTED_IT = "whoDetectedIt"
+        private const val HOW_IT_WAS_DETECTED = "howItWasDetected"
+        private const val DETECTION_COUNT = "detectionCount"
+        private const val INDICATE_YOUR_MANAGER = "indicateYourManager"
+    }
 }
 
 //val list: List<OJT> = arrayListOf(
@@ -259,23 +318,37 @@ class DataMapper @Inject constructor(
 //
 //return list
 
-//                val list: List<OJT> = arrayListOf(
-//                    OJT(
-//                        1,
-//                        "Пожарка", "40", "Корпус 2, Здание 1", "Сделать то твцф фзцвпщ укт ктуцзптщ ущ укзп цщутп щцктпщтцтп кщтуцщшпкщт щшцукпщшкуцщз тцукпщшкщтцуштпщ цуктпщтк ущшптцщукшптщцшук", "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhC5mIuy2KaMll2PVI4iE_18w4c7zDCcSi0PzWijCWeakJEJRGhAnIaSkYGLK7dEYlTwYnqTzwOJJcRxBrNFrZMsRovChY8CVpVIXH5pNPPj5wo1kPfGeth4z690xixWqd69vceT1yMaxGB4nDNXUnQ-kuJm3yHgqJreLneAV0nWp4lsF-BPFX0CgM8Tw/w1200-h630-p-k-no-nu/card%20view.jpg",
-//                        "wadaw", "Иванов И И", "dwa", "Симомненко М М",
-//                        "12.05.23", false
-//                    ),
-//                    OJT(
-//                        2,
-//                        "Пожарка", "40", "Корпус 2, Здание 1", "Сделать то твцф фзцвпщ укт ктуцзптщ ущ укзп цщутп щцктпщтцтп кщтуцщшпкщт щшцукпщшкуцщз тцукпщшкщтцуштпщ цуктпщтк ущшптцщукшптщцшук", "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhC5mIuy2KaMll2PVI4iE_18w4c7zDCcSi0PzWijCWeakJEJRGhAnIaSkYGLK7dEYlTwYnqTzwOJJcRxBrNFrZMsRovChY8CVpVIXH5pNPPj5wo1kPfGeth4z690xixWqd69vceT1yMaxGB4nDNXUnQ-kuJm3yHgqJreLneAV0nWp4lsF-BPFX0CgM8Tw/w1200-h630-p-k-no-nu/card%20view.jpg",
-//                        "wadaw", "Иванов И И", "dwa", "Симомненко М М",
-//                        "12.05.23", true
-//                    ),
-//                    OJT(
-//                        3,
-//                        "Пожарка", "40", "Корпус 2, Здание 1", "Сделать то твцф фзцвпщ укт ктуцзптщ ущ укзп цщутп щцктпщтцтп кщтуцщшпкщт щшцукпщшкуцщз тцукпщшкщтцуштпщ цуктпщтк ущшптцщукшптщцшук", "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhC5mIuy2KaMll2PVI4iE_18w4c7zDCcSi0PzWijCWeakJEJRGhAnIaSkYGLK7dEYlTwYnqTzwOJJcRxBrNFrZMsRovChY8CVpVIXH5pNPPj5wo1kPfGeth4z690xixWqd69vceT1yMaxGB4nDNXUnQ-kuJm3yHgqJreLneAV0nWp4lsF-BPFX0CgM8Tw/w1200-h630-p-k-no-nu/card%20view.jpg",
-//                        "wadaw", "Иванов И И", "dwa", "Симомненко М М",
-//                        "12.05.23", false
-//                    ),
+//        val list: List<WorkerHSE> = arrayListOf(
+//            WorkerHSE(
+//                3,
+//                "Aleksandr",
+//                "LFD",
+//                arrayListOf(
+//                    HSE("Covid","2","3","5","5.02"),
+//                    HSE("SAF","2","3","5","5.02"),
+//                    HSE("SGR","2","3","5","5.02")
 //                )
+//            ),
+//            WorkerHSE(
+//                4,
+//                "Sofia Dolce",
+//                "SDF",
+//                arrayListOf(
+//                    HSE("Covid","2","3","5","5.02"),
+//                    HSE("SAF","2","3","5","5.02"),
+//                    HSE("SGR","2","3","5","5.02")
+//                )
+//            )
+//            ,WorkerHSE(
+//                5,
+//                "Smorodinov",
+//                "REG",
+//                arrayListOf(
+//                    HSE("Covid","2","3","5","5.02"),
+//                    HSE("SAF","2","3","5","5.02"),
+//                    HSE("SGR","2","3","5","7.2")
+//                )
+//            )
+//        )
+//
+//        return list
