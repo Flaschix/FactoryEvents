@@ -8,6 +8,9 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,9 +24,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
@@ -34,9 +39,12 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.RadioButton
+import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldColors
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
@@ -48,15 +56,20 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
@@ -97,6 +110,7 @@ fun ReportScreen(
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
+                .background(colorResource(id = R.color.firstColor))
         ) {
 
             //что произошло?
@@ -199,9 +213,14 @@ fun ReportScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp)
+                    .padding(start = 16.dp, end = 16.dp),
+                colors = ButtonDefaults.buttonColors(colorResource(id = R.color.secondColor)),
+                border = BorderStroke(1.dp, color = colorResource(id = R.color.white))
             ) {
-                Text(text = stringResource(id = R.string.report_violation))
+                Text(
+                    text = stringResource(id = R.string.report_violation),
+                    color = colorResource(id = R.color.white)
+                )
             }
 
             Spacer(modifier = Modifier.height(100.dp))
@@ -219,15 +238,26 @@ private fun TextFieldWithHelperMessage(descript: String, helpMsg: String, update
         OutlinedTextField(
             value = text,
             onValueChange = { text = it },
-            label = { Text(descript) },
+            label = { Text(
+                text = descript,
+                color = colorResource(id = R.color.white)
+            ) },
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                backgroundColor = colorResource(id = R.color.secondColor),
+                unfocusedBorderColor = colorResource(id = R.color.white),
+                focusedBorderColor = colorResource(id = R.color.white),
+                cursorColor = colorResource(id = R.color.white),
+                focusedLabelColor = colorResource(id = R.color.white),
+                textColor = colorResource(id = R.color.white)
+            ),
         )
         update(text)
         Text(
             text = helpMsg,
-            color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
+            color = colorResource(id = R.color.white),
             style = MaterialTheme.typography.caption,
             modifier = Modifier.padding(start = 16.dp)
         )
@@ -247,10 +277,21 @@ private fun NumberOutlinedTextFieldSample(descript: String, update: (data: Strin
         ),
         value = text,
         onValueChange = { text = if(it.toIntOrNull() != null) it else text },
-        label = { Text(descript) },
+        label = { Text(
+            text = descript,
+            color = colorResource(id = R.color.white)
+        ) },
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            backgroundColor = colorResource(id = R.color.secondColor),
+            unfocusedBorderColor = colorResource(id = R.color.white),
+            focusedBorderColor = colorResource(id = R.color.white),
+            cursorColor = colorResource(id = R.color.white),
+            focusedLabelColor = colorResource(id = R.color.white),
+            textColor = colorResource(id = R.color.white)
+        )
     )
 
     update(text)
@@ -258,43 +299,57 @@ private fun NumberOutlinedTextFieldSample(descript: String, update: (data: Strin
 
 @Composable
 private fun RecurrentIssueButtons(update: (data: String) -> Unit) {
-    Text(
-        text = stringResource(id = R.string.is_it_a_recurrent_issue),
-        style = MaterialTheme.typography.body1.merge(),
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp)
-    )
+            .clip(RoundedCornerShape(10.dp))
+            .border(1.dp, color = colorResource(id = R.color.white), RoundedCornerShape(10.dp))
+            .background(colorResource(id = R.color.secondColor))
+    ){
+        Text(
+            text = stringResource(id = R.string.is_it_a_recurrent_issue),
+            style = MaterialTheme.typography.body1.merge(),
+            modifier = Modifier.padding(start = 8.dp, top = 6.dp),
+            fontSize = 16.sp,
+            color = colorResource(id = R.color.white)
+        )
 
-    val radioOptions = listOf("Да", "Нет", "Не могу ответить")
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
-    // Note that Modifier.selectableGroup() is essential to ensure correct accessibility behavior
-    Column(Modifier.selectableGroup()) {
+        val radioOptions = listOf("Да", "Нет", "Не могу ответить")
+        val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
+        // Note that Modifier.selectableGroup() is essential to ensure correct accessibility behavior
+        Column(Modifier.selectableGroup()) {
 
-        radioOptions.forEach { text ->
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp)
-                    .selectable(
+            radioOptions.forEach { text ->
+                Row(
+                    Modifier
+                        .padding(start = 8.dp)
+                        .fillMaxWidth()
+                        .selectable(
+                            selected = (text == selectedOption),
+                            onClick = { onOptionSelected(text) },
+                            role = Role.RadioButton
+                        )
+                        .padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
                         selected = (text == selectedOption),
-                        onClick = { onOptionSelected(text) },
-                        role = Role.RadioButton
+                        colors = RadioButtonDefaults.colors(
+                            selectedColor = colorResource(id = R.color.white),
+                            unselectedColor = colorResource(id = R.color.white)
+                        ),
+                        onClick = null // null recommended for accessibility with screenreaders
                     )
-                    .padding(horizontal = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                RadioButton(
-                    selected = (text == selectedOption),
-                    onClick = null // null recommended for accessibility with screenreaders
-                )
-                Text(
-                    text = text,
-                    style = MaterialTheme.typography.body1.merge(),
-                    modifier = Modifier.padding(start = 16.dp)
-                )
-                if(text == selectedOption) update(text)
+                    Text(
+                        text = text,
+                        style = MaterialTheme.typography.body1.merge(),
+                        modifier = Modifier.padding(start = 16.dp),
+                        color = colorResource(id = R.color.white)
+                    )
+                    if(text == selectedOption) update(text)
 
+                }
             }
         }
     }
@@ -337,14 +392,22 @@ private fun TimeField(helpMsg: String, update: (data: String) -> Unit){
                     } else {
                         // not focused
                     }
-                }
+                },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                backgroundColor = colorResource(id = R.color.secondColor),
+                unfocusedBorderColor = colorResource(id = R.color.white),
+                focusedBorderColor = colorResource(id = R.color.white),
+                cursorColor = colorResource(id = R.color.white),
+                focusedLabelColor = colorResource(id = R.color.white),
+                textColor = colorResource(id = R.color.white)
+            )
         )
 
         update(mTime.value.format(timeFormat))
 
         Text(
             text = helpMsg,
-            color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
+            color = colorResource(id = R.color.white),
             style = MaterialTheme.typography.caption,
             modifier = Modifier.padding(start = 16.dp)
         )
@@ -401,12 +464,20 @@ fun DateField(helpMsg: String, update: (data: String) -> Unit){
                     } else {
                         // not focused
                     }
-                }
+                },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                backgroundColor = colorResource(id = R.color.secondColor),
+                unfocusedBorderColor = colorResource(id = R.color.white),
+                focusedBorderColor = colorResource(id = R.color.white),
+                cursorColor = colorResource(id = R.color.white),
+                focusedLabelColor = colorResource(id = R.color.white),
+                textColor = colorResource(id = R.color.white)
+            )
         )
         update(mDate.value)
         Text(
             text = helpMsg,
-            color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
+            color = colorResource(id = R.color.white),
             style = MaterialTheme.typography.caption,
             modifier = Modifier.padding(start = 16.dp)
         )
@@ -419,62 +490,55 @@ fun PhotoSelectorView(maxSelectionCount: Int = 1, update: (data: Uri) -> Unit) {
         mutableStateOf<List<Uri?>>(emptyList())
     }
 
-    val buttonText = if (maxSelectionCount > 1) {
-        "Select up to $maxSelectionCount photos"
-    } else {
-        "Select a photo"
-    }
+    val buttonText = "Select a photo"
 
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri -> selectedImages = listOf(uri) }
     )
 
-    // I will start this off by saying that I am still learning Android development:
-    // We are tricking the multiple photos picker here which is probably not the best way,
-    // if you know of a better way to implement this feature drop a comment and let me know
-    // how to improve this design
-    val multiplePhotoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickMultipleVisualMedia(maxItems = if (maxSelectionCount > 1) {
-            maxSelectionCount
-        } else {
-            2
-        }),
-        onResult = { uris -> selectedImages = uris }
-    )
-
     fun launchPhotoPicker() {
-        if (maxSelectionCount > 1) {
-            multiplePhotoPickerLauncher.launch(
-                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-            )
-        } else {
-            singlePhotoPickerLauncher.launch(
-                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-            )
-        }
+        singlePhotoPickerLauncher.launch(
+            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+        )
     }
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(onClick = {
-            launchPhotoPicker()
-        }) {
-            Text(buttonText)
-        }
         if (selectedImages.isNotEmpty()) {
-            imgTEST =  selectedImages[0]!!
-
-
             update(selectedImages[0]!!)
+
+            AsyncImage(
+                model = selectedImages[0],
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+                    .background(colorResource(id = R.color.secondColor), RoundedCornerShape(10.dp))
+                    .border(1.dp, colorResource(id = R.color.white), RoundedCornerShape(10.dp)),
+                contentScale = ContentScale.Fit
+            )
         }
-        ImageLayoutView(selectedImages = selectedImages)
+//        ImageLayoutView(selectedImages = selectedImages)
+
+        Button(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp)
+                .fillMaxWidth(),
+            onClick = { launchPhotoPicker() },
+            colors = ButtonDefaults.buttonColors(colorResource(id = R.color.secondColor)),
+            border = BorderStroke(1.dp, color = colorResource(id = R.color.white))
+        ) {
+            Text(
+                text = buttonText,
+                 color = colorResource(id = R.color.white)
+            )
+        }
     }
 }
 
-private var imgTEST: Uri = "".toUri()
 
 @Composable
 fun ImageLayoutView(selectedImages: List<Uri?>) {
@@ -530,11 +594,23 @@ fun Demo_SearchableExposedDropdownMenuBox(title: String, helpMsg: String, update
             OutlinedTextField(
                 value = selectedText,
                 onValueChange = { selectedText = it },
-                label = { Text(text = title) },
+                label = { Text(
+                    text = title,
+                    color = colorResource(id = R.color.white)
+                ) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    backgroundColor = colorResource(id = R.color.secondColor),
+                    unfocusedBorderColor = colorResource(id = R.color.white),
+                    focusedBorderColor = colorResource(id = R.color.white),
+                    cursorColor = colorResource(id = R.color.white),
+                    focusedLabelColor = colorResource(id = R.color.white),
+                    textColor = colorResource(id = R.color.white),
+                    trailingIconColor = colorResource(id = R.color.white)
+                )
             )
 
             val filteredOptions =
@@ -548,6 +624,7 @@ fun Demo_SearchableExposedDropdownMenuBox(title: String, helpMsg: String, update
                 ) {
                     filteredOptions.forEach { item ->
                         DropdownMenuItem(
+                            modifier = Modifier.background(colorResource(id = R.color.secondColor)),
                             onClick = {
                                 selectedText = item.first
                                 expanded = false
@@ -555,7 +632,10 @@ fun Demo_SearchableExposedDropdownMenuBox(title: String, helpMsg: String, update
                                 update(item.second)
                             },
                         ){
-                            Text(text = item.first)
+                            Text(
+                                text = item.first,
+                                color = colorResource(id = R.color.white),
+                            )
                         }
                     }
                 }
@@ -563,7 +643,7 @@ fun Demo_SearchableExposedDropdownMenuBox(title: String, helpMsg: String, update
         }
         Text(
             text = helpMsg,
-            color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
+            color = colorResource(id = R.color.white),
             style = MaterialTheme.typography.caption,
             modifier = Modifier.padding(start = 16.dp)
         )

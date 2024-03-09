@@ -1,6 +1,7 @@
 package com.example.factoryevents.presentation.HSE
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -46,10 +49,11 @@ fun HseScreen(
         is HseScreenState.Loading -> {
             Box(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .background(color = colorResource(id = R.color.firstColor)),
                 contentAlignment = Alignment.Center
             ){
-                CircularProgressIndicator(color = Color.Blue)
+                CircularProgressIndicator(color = colorResource(id = R.color.white))
             }
         }
     }
@@ -61,13 +65,12 @@ private fun ShowHSEList(
     viewModel: HseScreenViewModel,
 ){
     LazyColumn(
-        contentPadding = PaddingValues(top = 10.dp, start = 6.dp, end = 6.dp, bottom = 100.dp),
-        verticalArrangement = Arrangement.spacedBy(6.dp)
+        contentPadding = PaddingValues(top = 10.dp, bottom = 100.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.background(colorResource(id = R.color.firstColor))
     ){
         items(list, key = {it.id}){ workerHSE ->
             ShowHSERow(workerHSE)
-            
-            Spacer(modifier = Modifier.height(10.dp))
         }
     }
     
@@ -77,32 +80,43 @@ private fun ShowHSEList(
 private fun ShowHSERow(
     workerHSE: WorkerHSE,
 ){
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(text = "Name:")
-            Text(text = workerHSE.manager)
-            Text(text = "Supervisor:")
-            Text(text = workerHSE.supervisor)
-        }
-        Row(
-            horizontalArrangement = Arrangement.Center,
 
+    Column(
+        modifier = Modifier
+            .background(colorResource(id = R.color.secondColor), RoundedCornerShape(10.dp))
+            .border(1.dp, color = colorResource(id = R.color.white), RoundedCornerShape(10.dp))
+            .padding(start = 4.dp, end = 4.dp)
+    ) {
+
+        Spacer(modifier = Modifier.height(3.dp))
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text(
+                text = "Имя: ${workerHSE.manager}",
+                color = colorResource(id = R.color.white)
+            )
+            Text(
+                text = "Отдел: ${workerHSE.supervisor}",
+                color = colorResource(id = R.color.white)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+
+            ) {
             HSE_Component(
                 stringResource(id = R.string.planned_line),
                 workerHSE.listOfHSE[0].plannedLine,
                 workerHSE.listOfHSE[1].plannedLine,
                 workerHSE.listOfHSE[2].plannedLine
             )
-
-            Spacer(modifier = Modifier.padding(start = 8.dp))
 
             HSE_Component(
                 stringResource(id = R.string.done_on_line),
@@ -111,16 +125,12 @@ private fun ShowHSERow(
                 workerHSE.listOfHSE[2].doneOnLine
             )
 
-            Spacer(modifier = Modifier.padding(start = 8.dp))
-
             HSE_Component(
                 stringResource(id = R.string.score),
                 workerHSE.listOfHSE[0].score,
                 workerHSE.listOfHSE[1].score,
                 workerHSE.listOfHSE[2].score
             )
-
-            Spacer(modifier = Modifier.padding(start = 8.dp))
 
             HSE_Component(
                 stringResource(id = R.string.date),
@@ -129,18 +139,32 @@ private fun ShowHSERow(
                 workerHSE.listOfHSE[2].date
             )
 
-            Spacer(modifier = Modifier.padding(start = 8.dp))
-
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text(text = "")
-                Text(text = "CV19")
-                Text(text = "SAF")
-                Text(text = "SGR")
+                Text(
+                    text = "",
+                    color = colorResource(id = R.color.white)
+                )
+                Text(
+                    text = "CV19",
+                    color = colorResource(id = R.color.white)
+                )
+                Text(
+                    text = "SAF",
+                    color = colorResource(id = R.color.white)
+                )
+                Text(
+                    text = "SGR",
+                    color = colorResource(id = R.color.white)
+                )
             }
         }
+
+        Spacer(modifier = Modifier.height(6.dp))
     }
+
+
 }
 
 @Composable
@@ -148,18 +172,30 @@ private fun HSE_Component(
     title: String,
     covid: String,
     saf: String,
-    sgr: String
+    sgr: String,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .border(1.dp, Color.Black)
-            .padding(2.dp)
+            .border(1.dp, color = colorResource(id = R.color.white), RoundedCornerShape(10.dp))
+            .padding(start = 4.dp, end = 4.dp)
     ) {
-        Text(text = title)
-        Text(text = covid)
-        Text(text = saf)
-        Text(text = sgr)
+        Text(
+            text = title,
+            color = colorResource(id = R.color.white)
+        )
+        Text(
+            text = covid,
+            color = colorResource(id = R.color.white)
+        )
+        Text(
+            text = saf,
+            color = colorResource(id = R.color.white)
+        )
+        Text(
+            text = sgr,
+            color = colorResource(id = R.color.white)
+        )
     }
 
 }

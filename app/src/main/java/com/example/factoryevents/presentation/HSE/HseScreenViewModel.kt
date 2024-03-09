@@ -1,5 +1,6 @@
 package com.example.factoryevents.presentation.HSE
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.factoryevents.domain.usecase.GetWorkerHSEListUseCase
 import com.example.factoryevents.extensions.mergeWith
@@ -31,4 +32,8 @@ class HseScreenViewModel @Inject constructor(
         .map { HseScreenState.HSE_List(it) as HseScreenState }
         .onStart { emit(HseScreenState.Loading) }
 //        .mergeWith(loadDataFlow)
+
+    fun refresh(){
+        Log.d("REFRESH_TEST", "refresh: TESTIM")
+    }
 }

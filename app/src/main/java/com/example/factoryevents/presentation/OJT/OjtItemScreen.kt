@@ -1,5 +1,6 @@
 package com.example.factoryevents.presentation.OJT
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -24,9 +27,11 @@ import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -68,6 +73,7 @@ private fun OjtInformation(
     ){
         Column(
             modifier = Modifier
+                .background(colorResource(id = R.color.firstColor))
                 .padding(all = 8.dp)
                 .verticalScroll(rememberScrollState())
         ) {
@@ -77,12 +83,12 @@ private fun OjtInformation(
             Spacer(modifier = Modifier.height(10.dp))
 
             AsyncImage(
-                model = ojt.img.ifEmpty { "https://www.minecraftskins.com/uploads/avatars/b81d7635e0a5e759016dcfc5110745d71c908510.png?v609" },
+                model = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhC5mIuy2KaMll2PVI4iE_18w4c7zDCcSi0PzWijCWeakJEJRGhAnIaSkYGLK7dEYlTwYnqTzwOJJcRxBrNFrZMsRovChY8CVpVIXH5pNPPj5wo1kPfGeth4z690xixWqd69vceT1yMaxGB4nDNXUnQ-kuJm3yHgqJreLneAV0nWp4lsF-BPFX0CgM8Tw/w1200-h630-p-k-no-nu/card%20view.jpg",
                 contentDescription = "",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentHeight()
-                    .border(2.dp, Color.Red, RectangleShape),
+                    .clip(RoundedCornerShape(10.dp))
+                    .wrapContentHeight(),
                 contentScale = ContentScale.FillWidth
             )
 
@@ -107,27 +113,46 @@ private fun Header(type: String, week: String, dueDate: String){
     ) {
         Text(
             text = "Тип: $type | Неделя: $week",
-            color = MaterialTheme.colors.onSurface
+            color = colorResource(id = R.color.white)
         )
+        Column(horizontalAlignment = Alignment.End) {
+            Text(
+                text = stringResource(id = R.string.ojt_due_date),
+                color = colorResource(id = R.color.white)
+            )
+            Text(
+                text = dueDate,
+                color = colorResource(id = R.color.white)
+            )
+        }
 
-        Text(
-            text = stringResource(id = R.string.ojt_due_date) + " $dueDate",
-            color = MaterialTheme.colors.onSurface
-        )
     }
 }
 
 @Composable
 private fun Describe(text: String = ""){
-    Text(
-        modifier = Modifier.fillMaxWidth(),
-        textAlign = TextAlign.Center,
-        text = stringResource(id = R.string.ojt_describe)
-    )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(10.dp))
+            .background(colorResource(id = R.color.secondColor))
+            .padding(top = 4.dp, bottom = 10.dp, start = 4.dp, end = 4.dp)
 
-    Spacer(modifier = Modifier.height(10.dp))
+    ) {
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            text = stringResource(id = R.string.ojt_describe),
+            color = colorResource(id = R.color.white)
+        )
 
-    Text(text = text)
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Text(
+            text = text,
+            color = colorResource(id = R.color.white)
+        )
+    }
 }
 
 @Composable
@@ -140,31 +165,36 @@ private fun Bottom(
     status: Boolean
 ){
     Text(
-        text = stringResource(id = R.string.ojt_place) + " $place"
+        text = stringResource(id = R.string.ojt_place) + " $place",
+        color = colorResource(id = R.color.white)
     )
 
     Spacer(modifier = Modifier.height(10.dp))
 
     Text(
-        text = stringResource(id = R.string.ojt_pilot) + " $pilot"
+        text = stringResource(id = R.string.ojt_pilot) + " $pilot",
+        color = colorResource(id = R.color.white)
     )
 
     Spacer(modifier = Modifier.height(10.dp))
 
     Text(
-        text = stringResource(id = R.string.ojt_responsibility) + " $areResponsible"
+        text = stringResource(id = R.string.ojt_responsibility) + " $areResponsible",
+        color = colorResource(id = R.color.white)
     )
 
     Spacer(modifier = Modifier.height(10.dp))
 
     Text(
-        text = stringResource(id = R.string.ojt_who_opened) + " $whoOpened"
+        text = stringResource(id = R.string.ojt_who_opened) + " $whoOpened",
+        color = colorResource(id = R.color.white)
     )
 
     Spacer(modifier = Modifier.height(10.dp))
 
     Text(
-        text = stringResource(id = R.string.ojt_options) + " $options"
+        text = stringResource(id = R.string.ojt_options) + " $options",
+        color = colorResource(id = R.color.white)
     )
 
     Spacer(modifier = Modifier.height(10.dp))
@@ -172,6 +202,7 @@ private fun Bottom(
     Text(
         text = stringResource(id = R.string.ojt_status) + " " +
                 if (status) stringResource(id = R.string.ojt_status_true)
-                else stringResource(id = R.string.ojt_status_false)
+                else stringResource(id = R.string.ojt_status_false),
+        color = colorResource(id = R.color.white)
     )
 }

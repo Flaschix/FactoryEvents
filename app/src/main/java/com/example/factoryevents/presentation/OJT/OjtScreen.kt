@@ -60,10 +60,13 @@ fun OjtScreen(
         is OjtScreenState.Loading -> {
             Box(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .background(colorResource(id = R.color.firstColor)),
                 contentAlignment = Alignment.Center
             ){
-                CircularProgressIndicator(color = Color.Blue)
+                CircularProgressIndicator(
+                    color = colorResource(id = R.color.white)
+                )
             }
         }
     }
@@ -78,9 +81,10 @@ private fun ShowOjtList(
     LazyColumn(
         contentPadding = PaddingValues(top = 10.dp, start = 6.dp, end = 6.dp, bottom = 100.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
+        modifier = Modifier.background(colorResource(id = R.color.firstColor))
     ){
         items(list, key = {it.id}){ ojt ->
-            Log.d("OJT_TEST", "${ojt.img}: ${ojt.img.isEmpty()}, id: ${ojt.id}")
+//            Log.d("OJT_TEST", "${ojt.img}: ${ojt.status}, id: ${ojt.id}")
             OjtItem(
                 ojt = ojt,
                 onClickListener = {
@@ -124,13 +128,19 @@ fun Header(ojt: OJT){
             .weight(2f)
         ) {
             Text(
-                text = "Тип: ${ojt.type} | Неделя: ${ojt.week}",
-                color = MaterialTheme.colors.onSurface
+                text = "Тип: ${ojt.type}",
+                color = colorResource(id = R.color.black)
             )
 
+//            Spacer(modifier = Modifier.height(3.dp))
+
+            Text(
+                text = "Неделя: ${ojt.week}",
+                color = colorResource(id = R.color.black)
+            )
             Spacer(modifier = Modifier.height(3.dp))
 
-            IconNearText(
+                IconNearText(
                 iconId = R.drawable.pilot_24,
                 text = ojt.pilot,
             )
@@ -151,8 +161,6 @@ fun Header(ojt: OJT){
 
         }
 
-        Spacer(modifier = Modifier.width(10.dp))
-
         Column(
             modifier = Modifier
                 .weight(1f),
@@ -163,14 +171,18 @@ fun Header(ojt: OJT){
             Icon(
                 modifier = Modifier.size(30.dp),
                 painter = painterResource(id = R.drawable.timer_24),
+                tint = colorResource(id = R.color.black),
                 contentDescription = null,
             )
             Spacer(modifier = Modifier.height(3.dp))
-            Text(text = ojt.dueDate)
+            Text(
+                text = ojt.dueDate,
+                color = colorResource(id = R.color.black)
+            )
         }
 
         AsyncImage(
-            model = ojt.img.ifEmpty { "https://www.minecraftskins.com/uploads/avatars/b81d7635e0a5e759016dcfc5110745d71c908510.png?v609" },
+            model = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhC5mIuy2KaMll2PVI4iE_18w4c7zDCcSi0PzWijCWeakJEJRGhAnIaSkYGLK7dEYlTwYnqTzwOJJcRxBrNFrZMsRovChY8CVpVIXH5pNPPj5wo1kPfGeth4z690xixWqd69vceT1yMaxGB4nDNXUnQ-kuJm3yHgqJreLneAV0nWp4lsF-BPFX0CgM8Tw/w1200-h630-p-k-no-nu/card%20view.jpg",
             modifier = Modifier
                 .weight(2f)
                 .fillMaxWidth()
@@ -205,6 +217,7 @@ fun IconNearText(
         Spacer(modifier = Modifier.width(5.dp))
         Text(
             text = text,
+
             color = textColor
         )
     }

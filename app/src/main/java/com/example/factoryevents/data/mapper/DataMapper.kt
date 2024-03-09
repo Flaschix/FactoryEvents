@@ -52,6 +52,28 @@ class DataMapper @Inject constructor(
                     val saf = rowArray.getJSONObject("SAF")
                     val sgr = rowArray.getJSONObject("SGR")
 
+
+                    var date19 = covid.getString("Date")
+                    if(date19 != "N/A" && date19.isNotEmpty()) {
+                        date19 = date19.substring(0, date19.indexOf("T"));
+                        val datespl = date19.split('-')
+                        date19 = "${datespl[2]}-${datespl[1]}-${datespl[0].substring(2,4)}"
+                    }else date19 = "N/A"
+
+                    var dateSaf = saf.getString("Date")
+                    if(dateSaf != "N/A" && dateSaf.isNotEmpty()) {
+                        dateSaf = dateSaf.substring(0, dateSaf.indexOf("T"));
+                        val datespl = dateSaf.split('-')
+                        dateSaf = "${datespl[2]}-${datespl[1]}-${datespl[0].substring(2,4)}"
+                    }else dateSaf = "N/A"
+
+                    var dateSgr = sgr.getString("Date")
+                    if(dateSgr != "N/A" && dateSgr.isNotEmpty()) {
+                        dateSgr = dateSgr.substring(0, dateSgr.indexOf("T"));
+                        val datespl = dateSgr.split('-')
+                        dateSgr = "${datespl[2]}-${datespl[1]}-${datespl[0].substring(2,4)}"
+                    }else dateSgr = "N/A"
+
                     list.add(
                         WorkerHSE(
                             id = i,
@@ -63,21 +85,21 @@ class DataMapper @Inject constructor(
                                     plannedLine = covid.getString("Planned Line"),
                                     doneOnLine = covid.getString("Done on Line"),
                                     score = covid.getString("Score"),
-                                    date = covid.getString("Date")
+                                    date = date19
                                 ),
                                 HSE(
                                     title = "SAF",
                                     plannedLine = saf.getString("Planned Line"),
                                     doneOnLine = saf.getString("Done on Line"),
                                     score = saf.getString("Score"),
-                                    date = saf.getString("Date")
+                                    date = dateSaf
                                 ),
                                 HSE(
                                     title = "SGR",
                                     plannedLine = sgr.getString("Planned Line"),
                                     doneOnLine = sgr.getString("Done on Line"),
                                     score = sgr.getString("Score"),
-                                    date = sgr.getString("Date")
+                                    date = dateSgr
                                 )
                             )
                         )
@@ -184,7 +206,13 @@ class DataMapper @Inject constructor(
 
                 for (i in 0 until userJsonArray.length()) {
                     val rowArray = userJsonArray.getJSONObject(i)
-
+                    var date = rowArray.getString("dueDate")
+//                    Log.d("TEST_DATE_MAPPER", "$date")
+                    if(date.isNotEmpty()) {
+                        date = date.substring(0, date.indexOf("T"));
+                        val datespl = date.split('-')
+                        date = "${datespl[2]}-${datespl[1]}-${datespl[0].substring(2,4)}"
+                    }else date = "N/N"
                     list.add(
                         OJT(
                             id = i,
@@ -197,7 +225,7 @@ class DataMapper @Inject constructor(
                             areResponsible = rowArray.getString( "areResponsible"),
                             options = rowArray.getString("options"),
                             pilot = rowArray.getString("pilot"),
-                            dueDate = rowArray.getString("dueDate"),
+                            dueDate = date,
                             status = rowArray.getBoolean("status")
                         )
                     )

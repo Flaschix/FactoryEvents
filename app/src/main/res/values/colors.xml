@@ -11,4 +11,5 @@
     <color name="thirdColor">#FFEEC28F</color>
     <color name="secondColor">#FF383258</color>
     <color name="firstColor">#FF48416C</color>
+    <color name="secondColorDark">#2A2A4B</color>
 </resources>

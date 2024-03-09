@@ -13,7 +13,7 @@
     <string name="ojt_status">Статус:</string>
     <string name="ojt_status_true">Закрыт</string>
     <string name="ojt_status_false">Открыт</string>
-    <string name="ojt_due_date">Срок выполнения:</string>
+    <string name="ojt_due_date">Срок выполнения</string>
     <string name="order_fire">Заявка по пожарке</string>
     <string name="what_happened">Что произошло?</string>
     <string name="describe_detected_deviation">Укажите, что именно вы обнаружили.</string>
@@ -34,10 +34,11 @@
     </string>
     <string name="thank_you_for_safety">Спасибо вам за поддержание безопасности на работе.</string>
     <string name="report_violation">Сообщить о нарушение</string>
-    <string name="planned_line">PL</string>
-    <string name="done_on_line">DL</string>
+    <string name="planned_line">Planned Line</string>
+    <string name="done_on_line">Done on Line</string>
     <string name="score">Score</string>
     <string name="date">Дата</string>
     <string name="report">Report</string>
+    <string name="report_request">Подать заявку на инцидент</string>
 
 </resources>
