@@ -54,21 +54,21 @@ class DataMapper @Inject constructor(
 
 
                     var date19 = covid.getString("Date")
-                    if(date19 != "N/A" && date19.isNotEmpty()) {
+                    if(date19 != "N/A" && date19 != "#N/A" && date19.isNotEmpty()) {
                         date19 = date19.substring(0, date19.indexOf("T"));
                         val datespl = date19.split('-')
                         date19 = "${datespl[2]}-${datespl[1]}-${datespl[0].substring(2,4)}"
                     }else date19 = "N/A"
 
                     var dateSaf = saf.getString("Date")
-                    if(dateSaf != "N/A" && dateSaf.isNotEmpty()) {
+                    if(dateSaf != "N/A" && dateSaf != "#N/A" && dateSaf.isNotEmpty()) {
                         dateSaf = dateSaf.substring(0, dateSaf.indexOf("T"));
                         val datespl = dateSaf.split('-')
                         dateSaf = "${datespl[2]}-${datespl[1]}-${datespl[0].substring(2,4)}"
                     }else dateSaf = "N/A"
 
                     var dateSgr = sgr.getString("Date")
-                    if(dateSgr != "N/A" && dateSgr.isNotEmpty()) {
+                    if(dateSgr != "N/A" && dateSgr != "#N/A" && dateSgr.isNotEmpty()) {
                         dateSgr = dateSgr.substring(0, dateSgr.indexOf("T"));
                         val datespl = dateSgr.split('-')
                         dateSgr = "${datespl[2]}-${datespl[1]}-${datespl[0].substring(2,4)}"

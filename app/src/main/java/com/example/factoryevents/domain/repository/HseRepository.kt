@@ -20,4 +20,6 @@ interface HseRepository {
     fun getUser(): StateFlow<User>
 
     suspend fun createOrder(order: Order)
+
+    suspend fun refreshHSEList()
 }

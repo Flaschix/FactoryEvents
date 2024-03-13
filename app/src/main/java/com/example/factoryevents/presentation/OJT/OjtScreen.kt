@@ -83,6 +83,9 @@ private fun ShowOjtList(
         verticalArrangement = Arrangement.spacedBy(6.dp),
         modifier = Modifier.background(colorResource(id = R.color.firstColor))
     ){
+        item {
+
+        }
         items(list, key = {it.id}){ ojt ->
 //            Log.d("OJT_TEST", "${ojt.img}: ${ojt.status}, id: ${ojt.id}")
             OjtItem(
@@ -221,4 +224,12 @@ fun IconNearText(
             color = textColor
         )
     }
+}
+
+
+@Composable
+fun SortOJT(
+
+){
+
 }

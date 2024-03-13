@@ -563,7 +563,6 @@ fun ImageLayoutView(selectedImages: List<Uri?>) {
 @Composable
 fun Demo_SearchableExposedDropdownMenuBox(title: String, helpMsg: String, update: (data: String) -> Unit) {
     val context = LocalContext.current
-    val coffeeDrinks = arrayOf("Americano", "Cappuccino", "Espresso", "Latte", "Mocha")
     val people = arrayOf(
         Pair("anastasia oleynikova", "smm.20@uni-dubna.ru"),
         Pair("vladimir lyalin", "smm.20@uni-dubna.ru"),

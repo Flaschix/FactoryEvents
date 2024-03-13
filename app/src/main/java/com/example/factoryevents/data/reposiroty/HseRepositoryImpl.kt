@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.stateIn
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import javax.inject.Inject
+import kotlin.math.log
 
 
 class HseRepositoryImpl @Inject constructor(
@@ -80,11 +81,15 @@ class HseRepositoryImpl @Inject constructor(
         hseWorkerDataEvent.emit(Unit)
 
         hseWorkerDataEvent.collect{
+//            Log.d("REFRESH_TEST", "check list: $workerHSEList")
+
             if(workerHSEList.isNotEmpty()) emit(workerHSEList)
 
             val list = mapper.mapResponseToHSE()
 
             _workerHSEList.addAll(list)
+
+//            Log.d("REFRESH_TEST", "check list after: $workerHSEList")
 
             emit(workerHSEList)
         }
@@ -97,6 +102,12 @@ class HseRepositoryImpl @Inject constructor(
             started = SharingStarted.Lazily,
             initialValue = workerHSEList
         )
+
+    override suspend fun refreshHSEList() {
+        _workerHSEList.clear()
+//        Log.d("REFRESH_TEST", "refreshHSEList: $_workerHSEList")
+        hseWorkerDataEvent.emit(Unit)
+    }
 
 
     override fun getWorkerHSEList(): StateFlow<List<WorkerHSE>> = workerHSEs
@@ -120,7 +131,7 @@ class HseRepositoryImpl @Inject constructor(
             if(ojtList.isNotEmpty()) emit(ojtList)
 
             try {
-                Log.d("MYTEST", user.toString())
+//                Log.d("MYTEST", user.toString())
                 val list = mapper.mapResponseToOJT(user)
                 _ojtList.addAll(list)
                 emit(ojtList)
