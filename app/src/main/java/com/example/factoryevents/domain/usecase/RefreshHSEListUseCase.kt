@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class RefreshHSEListUseCase @Inject constructor(private val repository: HseRepository) {
 
-    suspend operator fun invoke() {
-        return repository.refreshHSEList()
+    suspend operator fun invoke(week: Int) {
+        return repository.refreshHSEList(week)
     }
 }

@@ -79,4 +79,8 @@ class ReportScreenViewModel @Inject constructor(
     fun updateIndicateYourManager(text: String){
         orderTest.indicateYourManager = text
     }
+
+    fun updateWhereDetected(text: String){
+        orderTest.whereDetected = text
+    }
 }

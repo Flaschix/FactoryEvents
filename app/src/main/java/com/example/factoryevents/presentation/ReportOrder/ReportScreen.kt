@@ -95,7 +95,7 @@ fun ReportScreen(
     Scaffold(
         topBar = {
             TopAppBar(title = {
-                Text(text = "Report")
+                Text(text = stringResource(id = R.string.report))
             },
                 navigationIcon = {
                     IconButton(onClick = { onBackPressedListener() }) {
@@ -121,6 +121,14 @@ fun ReportScreen(
                 viewModel.updateWhatHappened(it)
             }
 
+            //где произошло?
+            WhereDetected(
+                stringResource(id = R.string.where_detected),
+                stringResource(id = R.string.where_detected)
+            ){
+                viewModel.updateWhereDetected(it)
+            }
+
             //Эта проблема уже случалась ранее?
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -140,7 +148,7 @@ fun ReportScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            PhotoSelectorView(maxSelectionCount = 3){
+            PhotoSelectorView(title = stringResource(id = R.string.photo_picker)){
                 viewModel.updateImage(it)
             }
 
@@ -485,12 +493,12 @@ fun DateField(helpMsg: String, update: (data: String) -> Unit){
 }
 
 @Composable
-fun PhotoSelectorView(maxSelectionCount: Int = 1, update: (data: Uri) -> Unit) {
+fun PhotoSelectorView(title: String, update: (data: Uri) -> Unit) {
     var selectedImages by remember {
         mutableStateOf<List<Uri?>>(emptyList())
     }
 
-    val buttonText = "Select a photo"
+    val buttonText = title
 
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
@@ -557,11 +565,89 @@ fun ImageLayoutView(selectedImages: List<Uri?>) {
 }
 
 
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun WhereDetected(title: String, helpMsg: String, update: (data: String) -> Unit) {
+    val context = LocalContext.current
+    val place = arrayOf(
+        "Все",
+        "PTS PLANT",
+        "THS TPT",
+        "THS PLANT",
+        "PTS PES",
+        "THS SC",
+        "PTS PTR",
+        "THS MNT",
+    )
 
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf("") }
+
+    Column(
+
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            }
+        ) {
+            OutlinedTextField(
+                value = selectedText,
+                onValueChange = { selectedText = it },
+                label = { Text(
+                    text = helpMsg,
+                    color = colorResource(id = R.color.white)
+                ) },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp)
+                    .fillMaxWidth(),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    backgroundColor = colorResource(id = R.color.secondColor),
+                    unfocusedBorderColor = colorResource(id = R.color.white),
+                    focusedBorderColor = colorResource(id = R.color.white),
+                    cursorColor = colorResource(id = R.color.white),
+                    focusedLabelColor = colorResource(id = R.color.white),
+                    textColor = colorResource(id = R.color.white),
+                    trailingIconColor = colorResource(id = R.color.white)
+                )
+            )
+
+            val filteredOptions =
+                place.filter { it.contains(selectedText, ignoreCase = true) }
+            if (filteredOptions.isNotEmpty()) {
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {
+                        // We shouldn't hide the menu when the user enters/removes any character
+                    }
+                ) {
+                    filteredOptions.forEach { item ->
+                        DropdownMenuItem(
+                            modifier = Modifier.background(colorResource(id = R.color.secondColor)),
+                            onClick = {
+                                selectedText = item
+                                expanded = false
+                                Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
+                                update(item)
+                            },
+                        ){
+                            Text(
+                                text = item,
+                                color = colorResource(id = R.color.white),
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Demo_SearchableExposedDropdownMenuBox(title: String, helpMsg: String, update: (data: String) -> Unit) {
+private fun Demo_SearchableExposedDropdownMenuBox(title: String, helpMsg: String, update: (data: String) -> Unit) {
     val context = LocalContext.current
     val people = arrayOf(
         Pair("anastasia oleynikova", "smm.20@uni-dubna.ru"),
@@ -649,6 +735,8 @@ fun Demo_SearchableExposedDropdownMenuBox(title: String, helpMsg: String, update
     }
 
 }
+
+
 
 
 

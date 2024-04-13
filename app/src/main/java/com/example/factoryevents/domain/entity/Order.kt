@@ -5,6 +5,7 @@ import androidx.core.net.toUri
 
 data class Order(
     var whatHappened: String = "",
+    var whereDetected: String = "",
     var imgLink: Uri = "".toUri(),
     var isItARecurrentIssue: String = "",
     var whyIsItProblem: String = "",

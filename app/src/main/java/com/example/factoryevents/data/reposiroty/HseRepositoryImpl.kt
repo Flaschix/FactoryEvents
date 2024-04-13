@@ -73,19 +73,29 @@ class HseRepositoryImpl @Inject constructor(
     private val workerHSEList: List<WorkerHSE>
         get() = _workerHSEList.toList()
 
-    private val hseWorkerDataEvent = MutableSharedFlow<Unit>(replay = 1)
+    private var _currentWeek: Int = 16
+
+    private val currentWeek: Int
+        get() = _currentWeek
+
+    private val hseWorkerDataEvent = MutableSharedFlow<Int>(replay = 1)
     private val refreshedListFlow = MutableSharedFlow<List<WorkerHSE>>()
 
     private val loadedWorkerHseListFlow = flow {
 
-        hseWorkerDataEvent.emit(Unit)
+        hseWorkerDataEvent.emit(currentWeek)
+        Log.d("TEST_HSE_LOAD", "currentWeek: $currentWeek")
 
         hseWorkerDataEvent.collect{
 //            Log.d("REFRESH_TEST", "check list: $workerHSEList")
 
-            if(workerHSEList.isNotEmpty()) emit(workerHSEList)
+            if(it != 0 && workerHSEList.isNotEmpty()) {
+                emit(workerHSEList)
+                return@collect
+            }
 
-            val list = mapper.mapResponseToHSE()
+            Log.d("TEST_HSE_LOAD", "it: $it")
+            val list = mapper.mapResponseToHSE(it)
 
             _workerHSEList.addAll(list)
 
@@ -93,6 +103,9 @@ class HseRepositoryImpl @Inject constructor(
 
             emit(workerHSEList)
         }
+    }.retry(2) {
+        delay(RETRY_TIME_OUT)
+        true
     }
 
     private val workerHSEs: StateFlow<List<WorkerHSE>> = loadedWorkerHseListFlow
@@ -103,14 +116,39 @@ class HseRepositoryImpl @Inject constructor(
             initialValue = workerHSEList
         )
 
-    override suspend fun refreshHSEList() {
+    override suspend fun refreshHSEList(week: Int) {
         _workerHSEList.clear()
-//        Log.d("REFRESH_TEST", "refreshHSEList: $_workerHSEList")
-        hseWorkerDataEvent.emit(Unit)
+        Log.d("TEST_HSE_LOAD", "refresh: 17")
+        hseWorkerDataEvent.emit(week)
     }
 
 
     override fun getWorkerHSEList(): StateFlow<List<WorkerHSE>> = workerHSEs
+//    override fun getWorkerHSEList(week: Int): StateFlow<List<WorkerHSE>> = flow {
+//        hseWorkerDataEvent.emit(Unit)
+//
+//        hseWorkerDataEvent.collect{
+//            if(currentWeek == week) {
+//                emit(workerHSEList)
+//                return@collect
+//            }
+//
+//            if(week != 0) _currentWeek = week
+//
+//            val list = mapper.mapResponseToHSE(currentWeek)
+//
+//            _workerHSEList.addAll(list)
+//
+//            emit(workerHSEList)
+//        }
+//    }.retry {
+//        delay(RETRY_TIME_OUT)
+//        true
+//    }.stateIn(
+//        scope = coroutineScope,
+//        started = SharingStarted.Lazily,
+//        initialValue = workerHSEList
+//    )
 
 
     //OJT ////////////////////////////////

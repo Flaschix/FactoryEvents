@@ -32,12 +32,12 @@ import kotlin.coroutines.suspendCoroutine
 class DataMapper @Inject constructor(
     private val context: Context
 ) {
-    suspend fun mapResponseToHSE(): List<WorkerHSE> = suspendCoroutine { continuation ->
+    suspend fun mapResponseToHSE(week: Int): List<WorkerHSE> = suspendCoroutine { continuation ->
         val action = "getHSE"
         var url = APP_SCRIPT_URL
-        val rank = "L2"
-        val name = "name"
-        url += "action=$action&rank=$rank&name=$name"
+        val rank = "L1"
+        val name = "evgeniy saleev"
+        url += "action=$action&rank=$rank&name=$name&week=$week"
 
         val request: JsonObjectRequest = JsonObjectRequest(
             Request.Method.GET, url, null,
@@ -146,6 +146,7 @@ class DataMapper @Inject constructor(
                 val params: MutableMap<String, String> = HashMap()
                 params[ACTION] = action
                 params[WHAT_HAPPENED] = order.whatHappened
+                params[WHERE_DETECTED] = order.whereDetected
                 params[IMAGE] = stringBitmap64Base
                 params[IS_IT_A_RECURRENT_ISSUE] = order.isItARecurrentIssue
                 params[WHY_IS_IT_PROBLEM] = order.whyIsItProblem
@@ -193,9 +194,10 @@ class DataMapper @Inject constructor(
     suspend fun mapResponseToOJT(user: User): List<OJT> = suspendCoroutine { continuation ->
         val action = "getOJT"
         var url = APP_SCRIPT_URL
-        val rank = "L2"
+        val rank = "L1"
         val func = "PTS PLANT"
-        url += "action=$action&rank=$rank&func=$func"
+        val name = "Сигалов М М"
+        url += "action=$action&rank=$rank&func=$func&name=$name"
 
         val request: JsonObjectRequest = JsonObjectRequest(
             Request.Method.GET, url, null,
@@ -270,10 +272,11 @@ class DataMapper @Inject constructor(
 
 
     companion object{
-        private const val APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzqFsojt7uCfBkece-N00xP8XRz2lTyjT2zNpWUW7rAxWZsKv3aJEZtPeCkIoylcz-A/exec?"
+        private const val APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbygjey3NlCBrBTicDLaD1HgDXm7FvOQ5F7FgUpaAskW3ww6Mgo8pkNqJfQdx2y8lxH7/exec?"
 
         private const val ACTION = "action"
         private const val WHAT_HAPPENED = "whatHappened"
+        private const val WHERE_DETECTED = "whereDetected"
         private const val IMAGE = "uImage"
         private const val IS_IT_A_RECURRENT_ISSUE = "isItARecurrentIssue"
         private const val WHY_IS_IT_PROBLEM = "whyIsItProblem"

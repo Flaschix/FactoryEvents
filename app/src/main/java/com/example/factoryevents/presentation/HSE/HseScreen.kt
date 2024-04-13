@@ -20,16 +20,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowForward
@@ -40,6 +44,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,6 +53,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.factoryevents.R
@@ -75,6 +83,7 @@ fun HseScreen(
                 ShowHSEList(
                     list = currentState.list,
                     viewModel = viewModel,
+                    nextDataIsLoading = currentState.nexDataIsLoading
                 )
 
 //                Button(
@@ -105,6 +114,7 @@ fun HseScreen(
 private fun ShowHSEList(
     list: List<WorkerHSE>,
     viewModel: HseScreenViewModel,
+    nextDataIsLoading: Boolean
 ){
     val loadState by viewModel.isLoading.collectAsState()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = loadState)
@@ -115,30 +125,44 @@ private fun ShowHSEList(
         SortTypeOwn.Mine -> list.filter { it.manager == "evgeniy saleev" }
     }
 
-    SwipeRefresh(
-        state = swipeRefreshState,
-        onRefresh = viewModel::refresh
-    ) {
-        LazyColumn(
-            contentPadding = PaddingValues(top = 10.dp, bottom = 100.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            modifier = Modifier.background(colorResource(id = R.color.firstColor))
-        ){
-            item {
-                SortDisplay(
-                    sortTypeOwn = currentSortTypeOwn,
-                    onNext = { currentSortTypeOwn = currentSortTypeOwn.getNext() },
-                    onPrevious = { currentSortTypeOwn = currentSortTypeOwn.getNext() }
-                )
+//    SwipeRefresh(
+//        state = swipeRefreshState,
+//        onRefresh = viewModel::refresh
+//    ) {
+    LazyColumn(
+        contentPadding = PaddingValues(top = 10.dp, bottom = 100.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.background(colorResource(id = R.color.firstColor))
+    ){
+        item {
+            if(nextDataIsLoading){
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ){
+                    CircularProgressIndicator(color = Color.Blue)
+                }
             }
-            items(sortedList, key = {it.id}){ workerHSE ->
-                ShowHSERow(
-                    workerHSE,
-                    modifier = Modifier.animateItemPlacement()
-                )
-            }
+            SortDisplay(
+                sortTypeOwn = currentSortTypeOwn,
+                onNext = { currentSortTypeOwn = currentSortTypeOwn.getNext() },
+                onPrevious = { currentSortTypeOwn = currentSortTypeOwn.getNext() }
+            )
+            SelectWeek(
+                update = { viewModel.refresh(it) }
+            )
+        }
+        items(sortedList, key = {it.id}){ workerHSE ->
+            ShowHSERow(
+                workerHSE,
+                modifier = Modifier.animateItemPlacement()
+            )
         }
     }
+//    }
 
 }
 
@@ -349,7 +373,7 @@ private fun SortDisplay(
             text = "Список: ${sortTypeOwn.name}",
             color = colorResource(id = R.color.white),
             modifier = Modifier
-                .background(colorResource(id = R.color.secondColor),RoundedCornerShape(10.dp))
+                .background(colorResource(id = R.color.secondColor), RoundedCornerShape(10.dp))
                 .border(1.dp, colorResource(id = R.color.white), RoundedCornerShape(10.dp))
                 .padding(horizontal = 20.dp, vertical = 12.dp)
         )
@@ -372,4 +396,49 @@ private fun SortDisplay(
             )
         }
     }
+}
+
+@Composable
+private fun SelectWeek(update: (data: Int) -> Unit) {
+    var text by rememberSaveable { mutableStateOf("16") }
+    
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        OutlinedTextField(
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.None,
+                autoCorrect = true,
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next
+            ),
+            value = text,
+            onValueChange = { text = if(it.toIntOrNull() != null) it else text },
+            label = { Text(
+                text = "Неделя",
+                color = colorResource(id = R.color.white)
+            ) },
+            modifier = Modifier
+                .weight(2f)
+                .padding(start = 16.dp, end = 16.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                backgroundColor = colorResource(id = R.color.secondColor),
+                unfocusedBorderColor = colorResource(id = R.color.white),
+                focusedBorderColor = colorResource(id = R.color.white),
+                cursorColor = colorResource(id = R.color.white),
+                focusedLabelColor = colorResource(id = R.color.white),
+                textColor = colorResource(id = R.color.white)
+            )
+        )
+        
+        Button(
+            onClick = { update(text.toInt()) },
+            modifier = Modifier.weight(1f).padding(end = 16.dp)
+        ) {
+            Text(text = "Загрузить")
+        }
+    }
+    
+
+    
 }

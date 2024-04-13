@@ -21,5 +21,5 @@ interface HseRepository {
 
     suspend fun createOrder(order: Order)
 
-    suspend fun refreshHSEList()
+    suspend fun refreshHSEList(week: Int)
 }

@@ -9,6 +9,7 @@ sealed class HseScreenState{
     object Loading: HseScreenState()
 
     data class HSE_List(
-        val list: List<WorkerHSE>
+        val list: List<WorkerHSE>,
+        val nexDataIsLoading: Boolean = false
     ): HseScreenState()
 }

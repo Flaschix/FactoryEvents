@@ -12,7 +12,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.factoryevents.navigation.AppNavGraph
@@ -52,7 +54,7 @@ fun MainScreen(
                         onClick = {
                             if(!selected) navigationState.navigateTo(item.screen.route)
                         },
-                        icon = { Icon(item.icon, contentDescription = null) },
+                        icon = { Icon(ImageVector.vectorResource(id = item.icon), contentDescription = null) },
                         label = { Text(text = stringResource(id = item.resId)) }
                     )
                 }

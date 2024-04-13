@@ -25,15 +25,22 @@ class HseScreenViewModel @Inject constructor(
     private val refreshHSEListUseCase: RefreshHSEListUseCase
 ): ViewModel() {
 
-    private val hseListFlow = getHSEListUseCase()
+    private var _hseListFlow = getHSEListUseCase()
+    private val hseListFlow
+        get() = _hseListFlow
 
-//    private val loadDataEvents = MutableSharedFlow<Unit>()
+//    private var _currentWeek: Int = 16
 //
-//    private val loadDataFlow = flow {
-//        loadDataEvents.collect{
-//            emit(HseScreenState.HSE_List(hseListFlow.value))
-//        }
-//    }
+//    private val currentWeek: Int
+//        get() = _currentWeek
+
+    private val loadDataEvents = MutableSharedFlow<Unit>()
+
+    private val loadDataFlow = flow {
+        loadDataEvents.collect{
+            emit(HseScreenState.HSE_List(hseListFlow.value, true))
+        }
+    }
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -41,19 +48,33 @@ class HseScreenViewModel @Inject constructor(
     val screenState = hseListFlow
         .catch {  }
         .filter {
-            _isLoading.value = false
             it.isNotEmpty()
         }
         .map { HseScreenState.HSE_List(it) as HseScreenState }
         .onStart { emit(HseScreenState.Loading) }
-
-
-//        .mergeWith(loadDataFlow)
+        .mergeWith(loadDataFlow)
 
     fun refresh(){
         viewModelScope.launch {
-            _isLoading.value = true
-            refreshHSEListUseCase()
+            loadDataEvents.emit(Unit)
+            refreshHSEListUseCase(17)
         }
     }
+
+    fun refresh(week: Int){
+        viewModelScope.launch {
+            loadDataEvents.emit(Unit)
+            refreshHSEListUseCase(week)
+        }
+    }
+
+//    fun getWeek(week: Int){
+//        if(week == currentWeek) return
+//        _isLoading.value = true
+//        _hseListFlow = getHSEListUseCase(week)
+//        _currentWeek = week
+//        viewModelScope.launch {
+//            refreshHSEListUseCase()
+//        }
+//    }
 }
