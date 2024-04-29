@@ -516,18 +516,20 @@ fun PhotoSelectorView(title: String, update: (data: Uri) -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (selectedImages.isNotEmpty()) {
-            update(selectedImages[0]!!)
+            if(selectedImages[0] != null){
+                update(selectedImages[0]!!)
 
-            AsyncImage(
-                model = selectedImages[0],
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-                    .background(colorResource(id = R.color.secondColor), RoundedCornerShape(10.dp))
-                    .border(1.dp, colorResource(id = R.color.white), RoundedCornerShape(10.dp)),
-                contentScale = ContentScale.Fit
-            )
+                AsyncImage(
+                    model = selectedImages[0],
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+                        .background(colorResource(id = R.color.secondColor), RoundedCornerShape(10.dp))
+                        .border(1.dp, colorResource(id = R.color.white), RoundedCornerShape(10.dp)),
+                    contentScale = ContentScale.Fit
+                )
+            }
         }
 //        ImageLayoutView(selectedImages = selectedImages)
 

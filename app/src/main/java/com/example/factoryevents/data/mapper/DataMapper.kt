@@ -272,7 +272,7 @@ class DataMapper @Inject constructor(
 
 
     companion object{
-        private const val APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbygjey3NlCBrBTicDLaD1HgDXm7FvOQ5F7FgUpaAskW3ww6Mgo8pkNqJfQdx2y8lxH7/exec?"
+        private const val APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx8bx9WxxkueqpGjECz-1O9mZ-O1SDh1mUL36SjtGkA27O5I4q0aT-Bi_02Hosk68G7/exec?"
 
         private const val ACTION = "action"
         private const val WHAT_HAPPENED = "whatHappened"
